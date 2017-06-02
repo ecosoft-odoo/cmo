@@ -15,7 +15,6 @@
         'sale_margin',
     ],
     'data': [
-        'report/report_saleorder.xml',
         'data/sale_data.xml',
         'wizard/cal_manage_fee_view.xml',
         'views/sale_view.xml',
