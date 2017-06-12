@@ -46,7 +46,7 @@
                     <field name="section_code" style="width:20%" />
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='state']" position="before">
-                    <button name="cal_management_fee"
+                    <button name="action_cal_management_fee"
                             string="Calculate" type="object"
                             attrs="{'invisible':[('order_lines_group', '!=', 'manage_fee')]}"
                             />
