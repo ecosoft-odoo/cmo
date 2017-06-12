@@ -9,6 +9,7 @@
     "version": "1.0",
     'depends': [
         'sale',
+        'cmo_sale_discount_total_enhance',
         'report',
     ],
     'data': [
