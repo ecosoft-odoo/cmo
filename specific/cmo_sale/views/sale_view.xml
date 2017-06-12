@@ -12,28 +12,20 @@
                 </field>
                 <xpath expr="///field[@name='project_id']" position="before">
                     <field name="project_related_id"/>
-                    <field name="event_date_description" style="width:200%"/>
-                    <field name="venue_description" style="width:200%"/>
+                    <field name="event_date_description" style="width:150%"/>
+                    <field name="venue_description" style="width:150%"/>
                     <field name="amount_before_management_fee" invisible="1"/>
                 </xpath>
                 <xpath expr="///field[@name='project_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <field name="amount_untaxed" position="after">
-                      <field name="amount_discount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                </field>
-                <field name="note" position="replace">
-                    <group>
-                        <field name="discount_type" style="width:20%"/>
-                        <field name="discount_rate"/>
-                        <field name="note" string="Remark"/>
-                    </group>
-                </field>
                 <field name="client_order_ref" position="after">
                     <field name="quote_ref_id"/>
                 </field>
-                <field name="user_id" position="after">
-                    <field name="approval_id"/>
+                <field name="note" position="replace">
+                    <group>
+                        <field name="note" string="Remark"/>
+                    </group>
                 </field>
                 <page string="Other Information" position="after">
                     <page string="Payment Term">
@@ -41,14 +33,14 @@
                             <field name="payment_term_description"/>
                         </group>
                     </page>
-                    <page string="Covenants Of Client">
+                    <page string="Convenants Of Client">
                         <group>
-                            <field name="covenant_description"/>
+                            <field name="convenant_description"/>
                         </group>
                     </page>
                 </page>
                 <!-- order line -->
-                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="before">
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
                     <field name="order_lines_group"/>
                     <field name="sale_layout_custom_group_id"/>
                     <field name="section_code" style="width:20%" />
@@ -76,8 +68,14 @@
                 <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/label[@for='delay']" position="attributes">
                     <attribute name="for"></attribute>
                 </xpath>
+                <!-- order line in sale order -->
                 <xpath expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='sale_layout_cat_id']" position="replace"/>
                 <xpath expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='tax_id']" position="replace"/>
+                <xpath expr="//field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='product_id']" position="before">
+                    <field name="order_lines_group"/>
+                    <field name="sale_layout_custom_group_id"/>
+                    <field name="section_code"/>
+                </xpath>
             </field>
         </record>
         <record id="view_order_form_sale_stock" model="ir.ui.view">

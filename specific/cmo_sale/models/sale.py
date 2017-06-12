@@ -3,27 +3,27 @@
 from openerp import fields, models, api
 
 class SaleConvenantDescription(models.Model):
-     _name = 'sale.convenant.description'
+    _name = 'sale.convenant.description'
 
-     name = fields.Char(
-         string='Name',
-         required=True,
-     )
-     description = fields.Text(
-         string='Description',
-         translate=True,
-     )
-     active = fields.Boolean(
-         string='Active',
-         default=True,
-     )
+    name = fields.Char(
+        string='Name',
+        required=True,
+    )
+    description = fields.Text(
+        string='Description',
+        translate=True,
+    )
+    active = fields.Boolean(
+        string='Active',
+        default=True,
+    )
 
-     _sql_constraints = [
-         ('name_uniq', 'UNIQUE(name)', 'Name must be unique!'),
-     ]
+    _sql_constraints = [
+        ('name_uniq', 'UNIQUE(name)', 'Name must be unique!'),
+    ]
 
 
-class sale_order(models.Model):
+class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     project_number = fields.Char(
@@ -55,51 +55,17 @@ class sale_order(models.Model):
         string='Payment Term',
         states={'done': [('readonly', True)]},
     )
-    covenant_description = fields.Text(
+    convenant_description = fields.Text(
         string='Covenant',
         translate=True,
-        default='_default_convenant',
+        default=lambda self: self._default_covenant(),
         states={'done': [('readonly', True)]},
-    )
-    discount_type = fields.Selection(
-        [('percent', 'Percentage'),
-         ('amount', 'Amount')],
-         inverse='_compute_discount_rate',
-         string='Discount Type',
-         states={'done': [('readonly', True)]},
-    )
-    discount_rate = fields.Float(
-        string='Discount Rate',
-        inverse='_compute_discount_rate',
-        store=True,
-        states={'done': [('readonly', True)]},
-    )
-    amount_discount = fields.Float(
-        string="Discount",
-        compute='_compute_amount_discount',
-        readonly=True,
     )
     quote_ref_id = fields.Many2one(
         'sale.order',
         string='Ref.Quotation',
-        # domain=[ TODO filter partner_id and project_number
-        #         ('partner_id', 'like', lambda self: self.partner_id),
-        #         ('project_number', 'like', lambda self: self.project_number),
-        #     ],
         states={'done': [('readonly', True)]},
     )
-    approval_id = fields.Many2one(
-        'res.users',
-        string='Approval',
-        states={'done': [('readonly', True)]},
-    )
-
-    @api.multi
-    @api.depends('amount_untaxed')
-    def _compute_amount_discount(self):
-        for line in self:
-            total = sum(line.order_line.mapped('price_unit'))
-            line.amount_discount = total - line.amount_untaxed
 
     @api.multi
     @api.depends('amount_before_management_fee')
@@ -108,20 +74,6 @@ class sale_order(models.Model):
             lambda r : r.order_lines_group == 'before'
             ).mapped('price_unit'))
         self.amount_before_management_fee = total
-
-    @api.depends('discount_type', 'discount_rate', 'order_line')
-    def _compute_discount_rate(self):
-        lines = self.order_line
-        if not self.discount_type:
-            return
-        percent = 0
-        if self.discount_type == 'percent':
-            percent = self.discount_rate
-        elif self.discount_type == 'amount':
-            total = sum(self.order_line.mapped('price_unit'))
-            percent = (self.discount_rate * 100.0) / total
-        for line in lines: # TODO: refactor iterator
-            line.discount = percent
 
     @api.onchange('project_related_id')
     def _onchange_project_number(self):
@@ -140,7 +92,7 @@ class sale_order(models.Model):
             quote.project_number = parent_project.project_number
 
     @api.model
-    def _default_convenant(self):
+    def _default_covenant(self):
         convenants = self.env['sale.convenant.description'].search([
             ['active', '=', True],
         ])
@@ -152,7 +104,7 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     order_lines_group = fields.Selection(
-        [('before','Before Management and Operation Fee'),
+        [('before','Before Management Fee'),
          ('manage_fee','Management and Operation Fee'),
         ],
         string='Group',
@@ -165,12 +117,12 @@ class SaleOrderLine(models.Model):
     sale_order_line_margin = fields.Float(
         string='Margin',
         compute='_compute_sale_order_line_margin',
+        readonly=True,
     )
     so_line_percent_margin = fields.Float(
         string='Percentage',
-        compute='_compute_so_line_percent_margin'
+        compute='_compute_so_line_percent_margin',
     )
-
     section_code = fields.Selection(
         [('A', 'A'),
          ('B', 'B'),
@@ -210,6 +162,7 @@ class SaleOrderLine(models.Model):
                 line.so_line_percent_margin = margin * 100.0 / line.price_unit
             else:
                 line.so_line_percent_margin = 0.0
+
 
 class SaleLayoutCustomGroup(models.Model):
     _name = 'sale_layout.custom_group'

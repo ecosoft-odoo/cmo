@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-                  # Convenant View
+        # Covenant View
         <record id="view_sale_convenant_description_form" model="ir.ui.view">
             <field name="name">sale.convenant.description.form</field>
             <field name="model">sale.convenant.description</field>
