@@ -12,9 +12,13 @@
     "license": "AGPL-3",
     "depends": [
         'stock_operating_unit',
+        'stock_account',
     ],
     "data": [
         'views/stock_view.xml',
+        'views/report_stockpicking.xml',
+        'views/stock_report.xml',
+        'views/stock_valuation_history_view.xml',
     ],
     "application": False,
     "installable": True,
