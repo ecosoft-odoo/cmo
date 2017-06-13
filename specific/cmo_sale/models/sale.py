@@ -98,11 +98,9 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_covenant(self):
-        covenants = self.env['sale.covenant.description'].search([
-            ['active', '=', True],
-        ])
-        if covenants:
-            return _(covenants[0].description)
+        Description = self.env['sale.covenant.description']
+        covenants = Description.search([('active', '=', True), ])
+        return covenants and covenants[0].description or False
 
 
 class SaleOrderLine(models.Model):
@@ -126,7 +124,7 @@ class SaleOrderLine(models.Model):
     )
     so_line_percent_margin = fields.Float(
         string='Percentage',
-        compute='_compute_so_line_percent_margin',
+        compute='_compute_sale_order_line_margin',
     )
     section_code = fields.Selection(
         [('A', 'A'),
@@ -152,27 +150,15 @@ class SaleOrderLine(models.Model):
         }
 
     @api.multi
-    @api.depends('sale_order_line_margin', 'price_unit',
-                 'purchase_price', 'product_uom_qty',
-                 )
-    @api.onchange('price_unit', 'purchase_price', 'product_uom_qty')
+    @api.depends('price_unit', 'purchase_price', 'product_uom_qty',)
     def _compute_sale_order_line_margin(self):
         for line in self:
             margin = (line.price_unit - line.purchase_price) * \
                 line.product_uom_qty
             line.sale_order_line_margin = margin
-
-    @api.multi
-    @api.depends('so_line_percent_margin', 'price_unit', 'purchase_price')
-    @api.onchange('price_unit', 'purchase_price')
-    def _compute_so_line_percent_margin(self):
-        for line in self:
-            margin = (line.price_unit - line.purchase_price)
-            if line.price_unit:
-                line.so_line_percent_margin = margin * 100.0 / \
-                    (line.price_unit or 1.0)
-            else:
-                line.so_line_percent_margin = 0.0
+            line.so_line_percent_margin = \
+                (line.price_unit - line.purchase_price) * 100.0 / \
+                (line.price_unit or 1.0)
 
 
 class SaleLayoutCustomGroup(models.Model):
