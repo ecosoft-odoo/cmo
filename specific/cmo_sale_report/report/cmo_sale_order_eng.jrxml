@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cmo_sale_order_eng" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="281"/>
+	<property name="ireport.y" value="763"/>
 	<property name="OPENERP_RELATIONS" value="[&quot;order_line&quot;]"/>
 	<queryString language="xPath">
 		<![CDATA[/data/record]]>
@@ -96,7 +96,7 @@
 		<groupFooter>
 			<band height="20">
 				<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-					<reportElement x="455" y="-1" width="100" height="20" isRemoveLineWhenBlank="true"/>
+					<reportElement x="455" y="0" width="100" height="20" isRemoveLineWhenBlank="true"/>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 					</box>
@@ -106,7 +106,7 @@
 					<textFieldExpression class="java.lang.Float"><![CDATA[($F{group} == "before") == true ? $V{sum total group} : null]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="372" y="-1" width="75" height="20"/>
+					<reportElement x="372" y="0" width="75" height="20" isRemoveLineWhenBlank="true"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 					</textElement>
@@ -137,7 +137,7 @@
 		</groupHeader>
 		<groupFooter>
 			<band height="22">
-				<textField pattern="###0.00;###0.00-">
+				<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
 					<reportElement x="455" y="1" width="100" height="20"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid"/>
@@ -323,9 +323,12 @@
 		<band splitType="Prevent"/>
 	</columnHeader>
 	<detail>
-		<band height="90" splitType="Stretch">
+		<band height="83" splitType="Stretch">
 			<textField>
-				<reportElement x="2" y="20" width="325" height="70" isRemoveLineWhenBlank="true"/>
+				<reportElement x="2" y="20" width="325" height="63" isRemoveLineWhenBlank="true"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement verticalAlignment="Top">
 					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 				</textElement>
@@ -388,10 +391,41 @@
 	<pageFooter>
 		<band splitType="Stretch"/>
 	</pageFooter>
+	<lastPageFooter>
+		<band/>
+	</lastPageFooter>
 	<summary>
-		<band height="619" splitType="Stretch">
+		<band height="637" splitType="Immediate">
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="134" width="555" height="20" forecolor="#000000" backcolor="#5FE9FE"/>
+				<textElement verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[ 2) Term of Peyment]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="235" width="555" height="20" forecolor="#000000" backcolor="#5FE9FE"/>
+				<textElement verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[ 3) Covenant of Client]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="16" y="154" width="427" height="81"/>
+				<textElement verticalAlignment="Top">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Term of Payment}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="16" y="255" width="427" height="95"/>
+				<textElement verticalAlignment="Top">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Covenant}]]></textFieldExpression>
+			</textField>
 			<textField pattern="###0.00;###0.00-">
-				<reportElement x="425" y="81" width="128" height="20"/>
+				<reportElement x="427" y="98" width="128" height="20"/>
 				<box>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
 				</box>
@@ -401,7 +435,7 @@
 				<textFieldExpression class="java.lang.Float"><![CDATA[$F{amount total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="425" y="41" width="128" height="20"/>
+				<reportElement x="427" y="78" width="128" height="20"/>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 				</box>
@@ -411,7 +445,7 @@
 				<textFieldExpression class="java.lang.Float"><![CDATA[$F{amount tax}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-">
-				<reportElement x="425" y="21" width="128" height="20"/>
+				<reportElement x="427" y="58" width="128" height="20"/>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 				</box>
@@ -421,145 +455,28 @@
 				<textFieldExpression class="java.lang.Float"><![CDATA[$F{amount untaxed}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="319" y="21" width="100" height="20"/>
+				<reportElement x="321" y="58" width="100" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 				</textElement>
 				<text><![CDATA[Untaxed Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="319" y="41" width="100" height="20"/>
+				<reportElement x="321" y="78" width="100" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 				</textElement>
 				<text><![CDATA[Vat 7 %]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="319" y="81" width="100" height="20"/>
+				<reportElement x="321" y="98" width="100" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 				</textElement>
 				<text><![CDATA[Grand Total]]></text>
 			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="0" y="113" width="555" height="20" forecolor="#000000" backcolor="#5FE9FE"/>
-				<textElement verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[ 2) Term of Peyment]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="0" y="214" width="555" height="20" forecolor="#000000" backcolor="#5FE9FE"/>
-				<textElement verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[ 3) Covenant of Client]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="16" y="133" width="427" height="81"/>
-				<textElement verticalAlignment="Top">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Term of Payment}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="16" y="234" width="427" height="95"/>
-				<textElement verticalAlignment="Top">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{Covenant}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="47" y="405" width="160" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["("+ $F{approval} +")"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="335" y="405" width="160" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["("+ $F{sale person}+ ")"]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="140" y="331" width="256" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[For and on behalf of CMO Public Company Limited]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="99" y="447" width="336" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[We agree and accept according to the terms and conditions of this quotation.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="47" y="385" width="177" height="20"/>
-				<box>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
-				</box>
-				<textElement>
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="330" y="385" width="177" height="20"/>
-				<box>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
-				</box>
-				<textElement>
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="216" y="528" width="110" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[ Authorized Signatory]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="186" y="548" width="177" height="20"/>
-				<box>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
-				</box>
-				<textElement>
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="158" y="548" width="28" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[Date]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="207" y="478" width="123" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{customer}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="186" y="508" width="177" height="20"/>
-				<box>
-					<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
-				</box>
-				<textElement>
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[]]></text>
-			</staticText>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="426" y="1" width="127" height="20" isRemoveLineWhenBlank="true"/>
+				<reportElement x="428" y="17" width="127" height="20" isRemoveLineWhenBlank="true"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
@@ -567,7 +484,7 @@
 				<textFieldExpression class="java.lang.Float"><![CDATA[($F{discount rate} != 0.0) == true ? $F{amount bf discount} : null]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="427" y="61" width="126" height="20" isRemoveLineWhenBlank="true"/>
+				<reportElement x="429" y="38" width="126" height="20" isRemoveLineWhenBlank="true"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
@@ -575,23 +492,115 @@
 				<textFieldExpression class="java.lang.Float"><![CDATA[($F{discount rate} != 0.0) == true ? $F{amount discount} : null]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="320" y="61" width="100" height="20" isRemoveLineWhenBlank="true">
-					<printWhenExpression><![CDATA[($F{discount rate} != 0.0) == true ]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[Discount Amount]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="277" y="1" width="143" height="22" isRemoveLineWhenBlank="true">
+				<reportElement x="321" y="38" width="100" height="20" isRemoveLineWhenBlank="true">
 					<printWhenExpression><![CDATA[($F{discount rate} != 0.0) == true]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 				</textElement>
-				<text><![CDATA[Amount before discount]]></text>
+				<text><![CDATA[Special Discount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="278" y="17" width="143" height="22" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[($F{discount rate} != 0.0) == true]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Amount Before Discount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="149" y="360" width="256" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[For and on behalf of CMO Public Company Limited]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="53" y="441" width="160" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["("+ $F{approval} +")"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="222" y="564" width="110" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[ Authorized Signatory]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="336" y="420" width="177" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
+				</box>
+				<textElement>
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="192" y="544" width="177" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
+				</box>
+				<textElement>
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="192" y="584" width="177" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
+				</box>
+				<textElement>
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="341" y="441" width="160" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["("+ $F{sale person}+ ")"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="105" y="483" width="336" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[We agree and accept according to the terms and conditions of this quotation.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="213" y="514" width="123" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{customer}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="164" y="584" width="28" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="53" y="421" width="177" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
+				</box>
+				<textElement>
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[]]></text>
 			</staticText>
 		</band>
 	</summary>
+	<noData>
+		<band/>
+	</noData>
 </jasperReport>
