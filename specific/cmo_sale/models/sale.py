@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from openerp import fields, models, api
+from openerp import fields, models, api, _
 
-class SaleConvenantDescription(models.Model):
-    _name = 'sale.convenant.description'
+class SaleCovenantDescription(models.Model):
+    _name = 'sale.covenant.description'
 
     name = fields.Char(
         string='Name',
@@ -55,7 +55,7 @@ class SaleOrder(models.Model):
         string='Payment Term',
         states={'done': [('readonly', True)]},
     )
-    convenant_description = fields.Text(
+    covenant_description = fields.Text(
         string='Covenant',
         translate=True,
         default=lambda self: self._default_covenant(),
@@ -64,6 +64,11 @@ class SaleOrder(models.Model):
     quote_ref_id = fields.Many2one(
         'sale.order',
         string='Ref.Quotation',
+        states={'done': [('readonly', True)]},
+    )
+    approval_id = fields.Many2one(
+        'res.users',
+        string='Approval',
         states={'done': [('readonly', True)]},
     )
 
@@ -93,11 +98,11 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_covenant(self):
-        convenants = self.env['sale.convenant.description'].search([
+        covenants = self.env['sale.covenant.description'].search([
             ['active', '=', True],
         ])
-        if convenants:
-            return convenants[0].description
+        if covenants:
+            return _(covenants[0].description)
 
 
 class SaleOrderLine(models.Model):
@@ -135,7 +140,7 @@ class SaleOrderLine(models.Model):
     )
 
     @api.multi
-    def cal_management_fee(self):
+    def action_cal_management_fee(self):
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -147,19 +152,25 @@ class SaleOrderLine(models.Model):
         }
 
     @api.multi
-    @api.onchange('price_unit', 'purchase_price')
+    @api.depends('sale_order_line_margin', 'price_unit',
+                 'purchase_price', 'product_uom_qty',
+                 )
+    @api.onchange('price_unit', 'purchase_price', 'product_uom_qty')
     def _compute_sale_order_line_margin(self):
         for line in self:
-            margin = line.price_unit - line.purchase_price
+            margin = (line.price_unit - line.purchase_price) * \
+                line.product_uom_qty
             line.sale_order_line_margin = margin
 
     @api.multi
+    @api.depends('so_line_percent_margin', 'price_unit', 'purchase_price')
     @api.onchange('price_unit', 'purchase_price')
     def _compute_so_line_percent_margin(self):
         for line in self:
-            margin = line.price_unit - line.purchase_price
+            margin = (line.price_unit - line.purchase_price)
             if line.price_unit:
-                line.so_line_percent_margin = margin * 100.0 / line.price_unit
+                line.so_line_percent_margin = margin * 100.0 / \
+                    (line.price_unit or 1.0)
             else:
                 line.so_line_percent_margin = 0.0
 
