@@ -2,8 +2,8 @@
 
 from openerp import fields, models, api, _
 
-class SaleConvenantDescription(models.Model):
-    _name = 'sale.convenant.description'
+class SaleCovenantDescription(models.Model):
+    _name = 'sale.covenant.description'
 
     name = fields.Char(
         string='Name',
@@ -55,7 +55,7 @@ class SaleOrder(models.Model):
         string='Payment Term',
         states={'done': [('readonly', True)]},
     )
-    convenant_description = fields.Text(
+    covenant_description = fields.Text(
         string='Covenant',
         translate=True,
         default=lambda self: self._default_covenant(),
@@ -93,11 +93,11 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_covenant(self):
-        convenants = self.env['sale.convenant.description'].search([
+        covenants = self.env['sale.covenant.description'].search([
             ['active', '=', True],
         ])
-        if convenants:
-            return _(convenants[0].description)
+        if covenants:
+            return _(covenants[0].description)
 
 
 class SaleOrderLine(models.Model):

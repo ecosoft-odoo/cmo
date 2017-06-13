@@ -33,9 +33,9 @@
                             <field name="payment_term_description"/>
                         </group>
                     </page>
-                    <page string="Convenants Of Client">
+                    <page string="Covenants Of Client">
                         <group>
-                            <field name="convenant_description"/>
+                            <field name="covenant_description"/>
                         </group>
                     </page>
                 </page>
