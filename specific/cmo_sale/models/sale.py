@@ -66,6 +66,11 @@ class SaleOrder(models.Model):
         string='Ref.Quotation',
         states={'done': [('readonly', True)]},
     )
+    approval_id = fields.Many2one(
+        'res.users',
+        string='Approval',
+        states={'done': [('readonly', True)]},
+    )
 
     @api.multi
     @api.depends('amount_before_management_fee')

@@ -22,6 +22,9 @@
                 <field name="client_order_ref" position="after">
                     <field name="quote_ref_id"/>
                 </field>
+                <xpath expr="//page[@string='Other Information']/group/group/field[@name='user_id']" position="before">
+                    <field name="approval_id"/>
+                </xpath>
                 <field name="note" position="replace">
                     <group>
                         <field name="note" string="Remark"/>
