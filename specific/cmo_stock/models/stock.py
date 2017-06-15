@@ -46,3 +46,22 @@ class StockMove(models.Model):
         if ou_id:
             location = Location.search([('operating_unit_id', '=', ou_id)])
         return location and location[0].id or False
+
+    @api.multi
+    @api.onchange('product_id', 'location_id', 'location_dest_id',
+                  'picking_id.partner_id')
+    def onchange_product_id(self):
+        for move in self:
+            res = super(StockMove, move).onchange_product_id(
+                move.product_id.id, move.location_id.id,
+                move.location_dest_id.id, move.picking_id.partner_id.id
+            )
+            if res:
+                res = res['value']
+                move.name = res.get('name', False)
+                move.product_uom = res.get('product_uom', False)
+                move.product_uos = res.get('product_uos', False)
+                move.product_uom_qty = res.get('product_uom_qty', False)
+                move.product_uos_qty = res.get('product_uos_qty', False)
+                move.location_id = res.get('location_id', False)
+                move.location_dest_id = res.get('location_dest_id', False)
