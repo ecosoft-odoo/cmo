@@ -9,11 +9,25 @@ class StockPicking(models.Model):
         'res.partner',
         default=lambda self: self._get_partner_id(),
     )
+    default_operating_unit_id = fields.Many2one(
+        'operating.unit',
+        string='Default Operating Unit',
+    )
 
     @api.model
     def _get_partner_id(self):
         user = self.env['res.users'].browse(self._uid)
         return user.partner_id and user.partner_id.id or False
+
+    @api.onchange('partner_id')
+    def onchange_partner_id(self):
+        User = self.env['res.users']
+        self.default_operating_unit_id = False
+        if self.partner_id:
+            user = User.search([('partner_id', '=', self.partner_id.id)])
+            if user:
+                self.default_operating_unit_id = \
+                    user.default_operating_unit_id.id
 
 
 class StockMove(models.Model):
