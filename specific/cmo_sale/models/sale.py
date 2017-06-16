@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import fields, models, api, _
+from openerp.exceptions import ValidationError
 
 class SaleCovenantDescription(models.Model):
     _name = 'sale.covenant.description'
@@ -16,7 +17,17 @@ class SaleCovenantDescription(models.Model):
     active = fields.Boolean(
         string='Active',
         default=True,
+        copy=False,
     )
+
+    @api.multi
+    @api.constrains('active')
+    def _constrains_active(self):
+        self.ensure_one()
+        active_cov = self.env['sale.covenant.description'].\
+            search([('active', '=', True), ])
+        if len(active_cov) > 1:
+            raise ValidationError("Must be only 1 active covenant!")
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE(name)', 'Name must be unique!'),
