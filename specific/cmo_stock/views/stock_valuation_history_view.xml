@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="stock_account.action_history_tree" model="ir.actions.act_window">
+            <field name="context">{'search_default_group_by_product': True}</field>
+        </record>
         <record id="view_stock_history_report_search" model="ir.ui.view">
             <field name="name">stock.history.report.search</field>
             <field name="model">stock.history</field>

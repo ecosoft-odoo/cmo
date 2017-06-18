@@ -12,6 +12,7 @@ class StockPicking(models.Model):
     default_operating_unit_id = fields.Many2one(
         'operating.unit',
         string='Default Operating Unit',
+        compute='_compute_default_operating_unit_id',
     )
 
     @api.model
@@ -19,15 +20,18 @@ class StockPicking(models.Model):
         user = self.env['res.users'].browse(self._uid)
         return user.partner_id and user.partner_id.id or False
 
-    @api.onchange('partner_id')
-    def onchange_partner_id(self):
-        User = self.env['res.users']
-        self.default_operating_unit_id = False
-        if self.partner_id:
-            user = User.search([('partner_id', '=', self.partner_id.id)])
-            if user:
-                self.default_operating_unit_id = \
-                    user.default_operating_unit_id.id
+    @api.multi
+    @api.depends('partner_id')
+    def _compute_default_operating_unit_id(self):
+        for picking in self:
+            User = picking.env['res.users']
+            picking.default_operating_unit_id = False
+            if picking.partner_id:
+                user = User.search([('partner_id', '=',
+                                     picking.partner_id.id)])
+                if user:
+                    picking.default_operating_unit_id = \
+                        user[0].default_operating_unit_id.id
 
 
 class StockMove(models.Model):
