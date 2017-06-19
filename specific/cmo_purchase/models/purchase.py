@@ -29,6 +29,14 @@ class PurchaseOrder(models.Model):
         self.event_date_description = self.order_ref.event_date_description
         self.venue_description = self.order_ref.venue_description
 
+    @api.onchange('project_id')
+    def _onchange_product_id(self):
+        self.order_ref = False
+        self.event_date_description = False
+        self.venue_description = False
+        for line in self.order_line:
+            line.product_ref = False
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
