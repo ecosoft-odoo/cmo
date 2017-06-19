@@ -15,6 +15,8 @@
         'sale_margin',
     ],
     'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'data/sale_data.xml',
         'wizard/cal_manage_fee_view.xml',
         'views/sale_view.xml',
