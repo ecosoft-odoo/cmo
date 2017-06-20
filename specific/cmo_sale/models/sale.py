@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from openerp import fields, models, api
+from openerp import fields, models, api, _
+from openerp.exceptions import ValidationError
 
-class SaleConvenantDescription(models.Model):
-    _name = 'sale.convenant.description'
+class SaleCovenantDescription(models.Model):
+    _name = 'sale.covenant.description'
 
     name = fields.Char(
         string='Name',
@@ -16,7 +17,17 @@ class SaleConvenantDescription(models.Model):
     active = fields.Boolean(
         string='Active',
         default=True,
+        copy=False,
     )
+
+    @api.multi
+    @api.constrains('active')
+    def _constrains_active(self):
+        self.ensure_one()
+        active_cov = self.env['sale.covenant.description'].\
+            search([('active', '=', True), ])
+        if len(active_cov) > 1:
+            raise ValidationError("Must be only 1 active covenant!")
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE(name)', 'Name must be unique!'),
@@ -55,7 +66,7 @@ class SaleOrder(models.Model):
         string='Payment Term',
         states={'done': [('readonly', True)]},
     )
-    convenant_description = fields.Text(
+    covenant_description = fields.Text(
         string='Covenant',
         translate=True,
         default=lambda self: self._default_covenant(),
@@ -64,6 +75,11 @@ class SaleOrder(models.Model):
     quote_ref_id = fields.Many2one(
         'sale.order',
         string='Ref.Quotation',
+        states={'done': [('readonly', True)]},
+    )
+    approval_id = fields.Many2one(
+        'res.users',
+        string='Approval',
         states={'done': [('readonly', True)]},
     )
 
@@ -93,11 +109,9 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_covenant(self):
-        convenants = self.env['sale.convenant.description'].search([
-            ['active', '=', True],
-        ])
-        if convenants:
-            return convenants[0].description
+        Description = self.env['sale.covenant.description']
+        covenants = Description.search([('active', '=', True), ])
+        return covenants and covenants[0].description or False
 
 
 class SaleOrderLine(models.Model):
@@ -121,7 +135,7 @@ class SaleOrderLine(models.Model):
     )
     so_line_percent_margin = fields.Float(
         string='Percentage',
-        compute='_compute_so_line_percent_margin',
+        compute='_compute_sale_order_line_margin',
     )
     section_code = fields.Selection(
         [('A', 'A'),
@@ -135,7 +149,7 @@ class SaleOrderLine(models.Model):
     )
 
     @api.multi
-    def cal_management_fee(self):
+    def action_cal_management_fee(self):
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -147,21 +161,15 @@ class SaleOrderLine(models.Model):
         }
 
     @api.multi
-    @api.onchange('price_unit', 'purchase_price')
+    @api.depends('price_unit', 'purchase_price', 'product_uom_qty',)
     def _compute_sale_order_line_margin(self):
         for line in self:
-            margin = line.price_unit - line.purchase_price
+            margin = (line.price_unit - line.purchase_price) * \
+                line.product_uom_qty
             line.sale_order_line_margin = margin
-
-    @api.multi
-    @api.onchange('price_unit', 'purchase_price')
-    def _compute_so_line_percent_margin(self):
-        for line in self:
-            margin = line.price_unit - line.purchase_price
-            if line.price_unit:
-                line.so_line_percent_margin = margin * 100.0 / line.price_unit
-            else:
-                line.so_line_percent_margin = 0.0
+            line.so_line_percent_margin = \
+                (line.price_unit - line.purchase_price) * 100.0 / \
+                (line.price_unit or 1.0)
 
 
 class SaleLayoutCustomGroup(models.Model):
