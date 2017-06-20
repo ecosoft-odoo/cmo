@@ -1,2 +1,3 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 access_sale_covenant_description,access_sale_covenant_description,model_sale_covenant_description,,1,0,0,0
+access_sale_layout_custom_group,access_sale_layout_custom_group,model_sale_layout_custom_group,,1,1,1,0
