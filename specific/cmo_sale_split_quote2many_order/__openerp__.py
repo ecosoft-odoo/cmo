@@ -13,6 +13,7 @@
         'cmo_sale_discount_total_enhance',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/sale.xml',
     ],
     'demo': [
