@@ -27,8 +27,9 @@ class sale_order(models.Model):
         track_visibility='always',
     )
 
-    @api.model
+    @api.multi
     def calculate_discount(self, vals):
+        self.ensure_one()
         discount = 0
         if ('discount_rate' in vals) and ('order_line' in vals):
             res = vals['sale_order_record']
@@ -40,10 +41,7 @@ class sale_order(models.Model):
                 )
                 total = amount if amount != 0 else 1 # prevent devison by zero
                 discount_rate = vals['discount_rate']
-                if discount_rate != 0:
-                    discount = (discount_rate / total) * 100.0
-                else:
-                    discount = discount_rate
+                discount = (discount_rate / total) * 100.0
             for line in res.order_line:
                 line.write({'discount': discount})
 
@@ -78,7 +76,7 @@ class sale_order(models.Model):
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
                 amount_untaxed += line.price_subtotal
-                amount_tax += self._amount_line_tax(line=line)
+                amount_tax += self._amount_line_tax(line)
                 amount_discount += (line.product_uom_qty *
                                     line.price_unit *
                                     line.discount) / 100
@@ -91,7 +89,8 @@ class sale_order(models.Model):
             order.amount_before_discount = amount_before_discount
 
     @api.multi
-    @api.onchange('discount_type', 'discount_rate', 'order_line')
+    @api.onchange('discount_type', 'discount_rate', 'order_line',
+        'order_line.product_uom_qty', 'order_line.price_unit')
     def supply_rate(self):
         for order in self:
             if order.discount_type == 'percent':
@@ -102,10 +101,7 @@ class sale_order(models.Model):
                             lambda r: r.product_uom_qty * r.price_unit)
                         )
                 total = amount if amount != 0 else 1 # prevent devison by zero
-                if order.discount_rate != 0:
-                    discount = (order.discount_rate / total) * 100.0
-                else:
-                    discount = order.discount_rate
+                discount = (order.discount_rate / total) * 100.0
                 for line in order.order_line:
                     line.discount = discount
         self._amount_all()
