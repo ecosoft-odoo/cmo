@@ -26,7 +26,7 @@ class sale_order(models.Model):
     )
     unrevisioned_name = fields.Char(
         string='Order Reference',
-        copy=True,
+        copy=False,
         readonly=True,
     )
     active = fields.Boolean(
