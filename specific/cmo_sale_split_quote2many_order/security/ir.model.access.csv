@@ -1,4 +1,2 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
 access_sale_order_customer_plan,access_sale_order_customer_plan,model_sale_order_customer_plan,base.group_sale_salesman,1,1,1,1
-director_sale_order_customer_plan,director_sale_order_customer_plan,model_sale_order_customer_plan,sale.group_sale_director,1,1,1,1
-readonly_sale_order_customer_plan,readonly_sale_order_customer_plan,model_sale_order_customer_plan,sale.group_sale_readonly,1,0,0,0

@@ -84,7 +84,7 @@
             <field name="arch" type="xml">
                 <!-- order line -->
                 <xpath expr="//field[@name='warehouse_id']" position="attributes">
-                    <attribute name="invisible">1</attribute>
+                    <attribute name="invisible">0</attribute>
                 </xpath>
             </field>
         </record>
