@@ -111,7 +111,8 @@ class sale_order(models.Model):
                 }
                 defaults.update(context_update)
         res = super(sale_order, self).copy(defaults)
-        res.write({'active': False})
+        if order.env.context.get('new_sale_revision'):
+            res.write({'active': False})
         return res
 
     @api.multi
