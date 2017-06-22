@@ -8,12 +8,12 @@ class PurchaseOrder(models.Model):
     project_id = fields.Many2one(
         'project.project',
         string='Project Name',
-        ondelete='restrict'
+        ondelete='restrict',
     )
     order_ref = fields.Many2one(
         'sale.order',
         string='Quotation Number',
-        ondelete='restrict'
+        ondelete='restrict',
     )
     event_date_description = fields.Char(
         string='Event Date',
@@ -22,6 +22,20 @@ class PurchaseOrder(models.Model):
     venue_description = fields.Char(
         string='Venue',
         size=250,
+    )
+    po_type = fields.Selection(
+        [('po_project', 'PO Project'), ('stationary', 'Stationary'),
+         ('service', 'Service')],
+        string='PO Type',
+        required=True,
+        default='po_project',
+    )
+    order_line2 = fields.One2many(
+        'purchase.order.line', 'order_id',
+        string='Order Lines',
+        states={'approved': [('readonly', True)],
+                'done': [('readonly', True)]},
+        copy=True,
     )
 
     @api.onchange('order_ref')

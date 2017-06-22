@@ -14,5 +14,16 @@ class ProductProduct(models.Model):
             args = [('id', 'in', product_ids)] + args
         elif 'order_ref' in context:
             args = [('id', 'in', [])]
+        elif 'po_type' in context:
+            Category = self.env['product.category']
+            category = []
+            if context.get('po_type', False) == 'stationary':
+                category = Category.search([('name', '=', 'Stationary')])
+            elif context.get('po_type', False) == 'service':
+                category = Category.search([('name', '=', 'Service')])
+            categ_ids = category.mapped('id')
+            product = self.search([('categ_id', 'in', categ_ids)])
+            product_ids = product.mapped('id')
+            args = [('id', 'in', product_ids)] + args
         return super(ProductProduct, self).name_search(
             name, args=args, operator=operator, limit=limit)
