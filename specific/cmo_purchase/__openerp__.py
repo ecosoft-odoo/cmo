@@ -13,6 +13,7 @@
     'data': [
         'security/cmo_purchase_security.xml',
         'views/purchase_view.xml',
+        'reports/purchase_report.xml',
     ],
     'demo': [
     ],
