@@ -31,19 +31,32 @@ class sale_order(models.Model):
     def calculate_discount(self, vals):
         self.ensure_one()
         discount = 0
+        last_line = False
         if ('discount_rate' in vals) and ('order_line' in vals):
             res = vals['sale_order_record']
+            cur = res.pricelist_id.currency_id
             if vals['discount_type'] == 'percent':
                 discount = vals['discount_rate']
+                order_lines = res.order_line
             else:
                 amount = sum(res.order_line.mapped(
                     lambda r: r.product_uom_qty * r.price_unit)
                 )
                 total = amount if amount != 0 else 1 # prevent devison by zero
                 discount_rate = vals['discount_rate']
-                discount = (discount_rate / total) * 100.0
-            for line in res.order_line:
+                discount = round((discount_rate / total) * 100.0, 16)
+                order_lines = res.order_line[:-1]
+                last_line = res.order_line[-1]
+            discount_line = 0
+            for line in order_lines:
                 line.write({'discount': discount})
+                discount_line += cur.round(
+                    line.price_unit * line.product_uom_qty * discount / 100.0
+                    )
+            if last_line:
+                last_discount = (cur.round(discount_rate - discount_line) / \
+                    last_line.price_unit) * 100.0
+                last_line.write({'discount': last_discount})
 
     @api.model
     def create(self, vals):
@@ -77,9 +90,9 @@ class sale_order(models.Model):
             for line in order.order_line:
                 amount_untaxed += line.price_subtotal
                 amount_tax += self._amount_line_tax(line)
-                amount_discount += (line.product_uom_qty *
+                amount_discount += round((line.product_uom_qty *
                                     line.price_unit *
-                                    line.discount) / 100
+                                    line.discount) / 100, 2)
                 amount_before_discount += (line.product_uom_qty *
                                            line.price_unit)
             order.amount_untaxed = cur.round(amount_untaxed)
@@ -101,9 +114,19 @@ class sale_order(models.Model):
                             lambda r: r.product_uom_qty * r.price_unit)
                         )
                 total = amount if amount != 0 else 1 # prevent devison by zero
-                discount = (order.discount_rate / total) * 100.0
-                for line in order.order_line:
+                discount = round((order.discount_rate / total) * 100.0, 16)
+                order_lines = order.order_line[:-1]
+                last_line = order.order_line[-1]
+                cur = order.pricelist_id.currency_id
+                discount_line = 0
+                for line in order_lines:
+                    discount_line += cur.round(
+                        line.price_unit * line.product_uom_qty * discount / 100.0
+                        )
                     line.discount = discount
+                last_line.discount = (cur.round(
+                    order.discount_rate - discount_line) /
+                    last_line.price_unit) * 100.0
         self._amount_all()
 
 
