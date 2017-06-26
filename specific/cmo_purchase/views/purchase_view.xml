@@ -4,40 +4,73 @@
         <record id="purchase.menu_purchase_rfq" model="ir.ui.menu">
             <field name="groups_id" eval="[(6,0,[ref('purchase_invisible')])]"/>
         </record>
+        <record id="purchase.purchase_form_action" model="ir.actions.act_window">
+            <field name="domain"></field>
+        </record>
         <record id="purchase_order_form" model="ir.ui.view">
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
+                <header position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </header>
+                <header position="after">
+                    <header>
+                        <button name="purchase_confirm" states="draft" string="Confirm Order" id="draft_confirm"/>
+                        <button name="action_cancel" states="draft" string="Cancel" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft, approved" readonly="1"/>
+                    </header>
+                </header>
+                <h1 position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </h1>
+                <h1 position="after">
+                    <h1>
+                        <label string="Purchase Order"/>
+                        <field name="name" class="oe_inline" readonly="1"/>
+                    </h1>
+                </h1>
                 <field name="partner_ref" position="after">
-                    <field name="project_id" attrs="{'invisible': ['|', ('po_type', '=', 'stationary'), ('po_type', '=', 'service')]}"/>
+                    <field name="project_id" attrs="{'invisible': ['|', ('po_type', '=', 'stationary'), ('po_type', '=', 'service')], 'required': [('po_type', 'in', ('po_project'))]}"/>
                     <field name="order_ref" domain="[('order_type', '=', 'quotation'), ('project_related_id', '!=', False), ('project_related_id', '=', project_id)]" attrs="{'invisible': ['|', ('po_type', '=', 'stationary'), ('po_type', '=', 'service')]}"/>
-                    <field name="event_date_description" style="width:150%" attrs="{'invisible': ['|', ('po_type', '=', 'stationary'), ('po_type', '=', 'service')]}"/>
-                    <field name="venue_description" style="width:150%" attrs="{'invisible': ['|', ('po_type', '=', 'stationary'), ('po_type', '=', 'service')]}"/>
+                    <field name="event_date_description" style="width:150%" attrs="{'invisible': ['|', ('po_type', '=', 'stationary'), ('po_type', '=', 'service')], 'required': [('order_ref', '!=', False)]}"/>
+                    <field name="venue_description" style="width:150%" attrs="{'invisible': ['|', ('po_type', '=', 'stationary'), ('po_type', '=', 'service')], 'required': [('order_ref', '!=', False)]}"/>
                 </field>
                 <field name="picking_type_id" position="after">
                     <field name="po_type"/>
                 </field>
+                <field name="notes" position="before">
+                    <group>
+                        <group>
+                            <field name="approve_ids"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </field>
                 <field name="date_planned" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                    <attribute name="required">0</attribute>
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="required">1</attribute>
                 </field>
                 <field name="account_analytic_id" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </field>
                 <field name="order_line" position="attributes">
-                    <attribute name="context">{'operating_unit_id': operating_unit_id, 'order_ref': order_ref}</attribute>
+                    <attribute name="context">{'operating_unit_id': operating_unit_id, 'order_ref': order_ref, 'po_type': po_type}</attribute>
                     <attribute name="attrs">{'invisible': ['|', ('po_type', '=', 'stationary'), ('po_type', '=', 'service')]}</attribute>
                 </field>
                 <field name="product_id" position="before">
-                    <field name="product_ref" context="{'order_ref': order_ref}"/>
+                    <field name="product_ref" context="{'order_ref': order_ref}" required="context.get('require_product_ref', 0) == 1"/>
+                </field>
+                <field name="product_id" position="attributes">
+                    <attribute name="context">{'po_type': po_type}</attribute>
                 </field>
                 <field name="order_line" position="after">
                     <field name="order_line2" context="{'operating_unit_id': operating_unit_id, 'po_type': po_type}" attrs="{'invisible': [('po_type', '!=', 'stationary'), ('po_type', '!=', 'service')]}">
                         <tree string="Purchase Order Lines" editable="bottom">
                             <field name="product_id" context="{'po_type': po_type}" on_change="onchange_product_id(parent.pricelist_id,product_id,0,False,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,False,False,parent.state,context)"/>
                             <field name="name"/>
-                            <field name="date_planned" invisible="1" required="0"/>
+                            <field name="date_planned" invisible="0" required="1"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="account_analytic_id" invisible="1" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
                             <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,False,parent.state,context)"/>

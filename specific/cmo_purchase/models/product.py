@@ -14,13 +14,18 @@ class ProductProduct(models.Model):
             args = [('id', 'in', product_ids)] + args
         elif 'order_ref' in context:
             args = [('id', 'in', [])]
-        elif 'po_type' in context:
+
+        # Search products by category
+        if 'po_type' in context:
             Category = self.env['product.category']
             category = []
-            if context.get('po_type', False) == 'stationary':
+            po_type = context.get('po_type', False)
+            if po_type == 'stationary':
                 category = Category.search([('name', '=', 'Stationary')])
-            elif context.get('po_type', False) == 'service':
+            elif po_type == 'service':
                 category = Category.search([('name', '=', 'Service')])
+            elif po_type == 'po_project':
+                category = Category.search([('name', '=', 'Project Cost')])
             categ_ids = category.mapped('id')
             product = self.search([('categ_id', 'in', categ_ids)])
             product_ids = product.mapped('id')

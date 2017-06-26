@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api
+# import json
 
 
 class PurchaseOrder(models.Model):
@@ -30,6 +31,11 @@ class PurchaseOrder(models.Model):
         required=True,
         default='po_project',
     )
+    approve_ids = fields.Many2one(
+        'hr.employee',
+        string='PO Approve',
+        required=True,
+    )
     order_line2 = fields.One2many(
         'purchase.order.line', 'order_id',
         string='Order Lines',
@@ -42,14 +48,42 @@ class PurchaseOrder(models.Model):
     def _onchange_order_id(self):
         self.event_date_description = self.order_ref.event_date_description
         self.venue_description = self.order_ref.venue_description
+        for line in self.order_line:
+            line.product_ref = False
+
+        # Add context for required fields in one2many
+        # window = self.env.ref("purchase.purchase_form_action")
+        # context = window.context
+        # context = context.replace("'", '"')
+        # try:
+        #     context = json.loads(context)
+        #     print context
+        #     if self.po_type == 'po_project' and self.order_ref:
+        #         context["require_product_ref"] = 1
+        #     else:
+        #         context["require_product_ref"] = 0
+        #     context = json.dumps(context).replace('"', "'")
+        # except:
+        #     context = context
+        # window.write({'context': context})
 
     @api.onchange('project_id')
-    def _onchange_product_id(self):
+    def _onchange_project_id(self):
         self.order_ref = False
         self.event_date_description = False
         self.venue_description = False
         for line in self.order_line:
             line.product_ref = False
+
+    @api.onchange('po_type')
+    def _onchange_po_type(self):
+        self.project_id = False
+        self.order_ref = False
+        self.event_date_description = False
+        self.venue_description = False
+        # self.with_context({'test': 1}).order_line = self.order_line
+        # self.order_line = [(6, 0, [])]
+        # self.order_line2 = [(6, 0, [])]
 
 
 class PurchaseOrderLine(models.Model):
