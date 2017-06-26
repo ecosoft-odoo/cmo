@@ -47,16 +47,19 @@ class SaleOrder(models.Model):
         'project.project',
         string='Project',
         states={'done': [('readonly', True)]},
+        required=True,
     )
     event_date_description = fields.Char(
         string='Event Date',
         size=250,
         states={'done': [('readonly', True)]},
+        required=True,
     )
     venue_description = fields.Char(
         string='Venue',
         size=250,
         states={'done': [('readonly', True)]},
+        required=True,
     )
     amount_before_management_fee = fields.Float(
         string="Before Management Fee",
@@ -76,6 +79,10 @@ class SaleOrder(models.Model):
         'sale.order',
         string='Ref.Quotation',
         states={'done': [('readonly', True)]},
+        domain=[
+            '&', ('order_type', 'like', 'quotation'),
+            ('state', 'not like', 'cancel'),
+        ],
     )
     approval_id = fields.Many2one(
         'res.users',
@@ -113,6 +120,20 @@ class SaleOrder(models.Model):
         covenants = Description.search([('active', '=', True), ])
         return covenants and covenants[0].description or False
 
+    @api.multi
+    @api.constrains('order_line')
+    def _constrains_order_line(self):
+        self.ensure_one()
+        if not self.order_line:
+            raise ValidationError("Must have at least 1 order line!")
+        else:
+            for line in self.order_line:
+                if (line.price_unit <= 0) or (line.product_uom_qty <= 0):
+                    raise ValidationError(
+                        "Unit Price and Quantity in order \
+                        line must more than zero !"
+                    )
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -123,6 +144,7 @@ class SaleOrderLine(models.Model):
         ],
         string='Group',
         default='before',
+        required=True,
     )
     sale_layout_custom_group_id = fields.Many2one(
         'sale_layout.custom_group',
@@ -146,6 +168,11 @@ class SaleOrderLine(models.Model):
          ('F', 'F'),
         ],
         string='Section Code',
+        required=True,
+    )
+    product_id = fields.Many2one(
+        'product.product',
+        required=True,
     )
 
     @api.multi
@@ -170,6 +197,27 @@ class SaleOrderLine(models.Model):
             line.so_line_percent_margin = \
                 (line.price_unit - line.purchase_price) * 100.0 / \
                 (line.price_unit or 1.0)
+
+    @api.onchange('order_lines_group')
+    def _onchange_order_lines_group(self):
+        res = {}
+        if self.order_lines_group == 'before':
+            res['domain'] = {
+                'product_id': [(
+                    'sale_layout_cat_id',
+                    'not like',
+                    'Management And Operation Fee',
+                )]
+            }
+        elif self.order_lines_group == 'manage_fee':
+            res['domain'] = {
+                'product_id': [(
+                    'sale_layout_cat_id',
+                    'like',
+                    'Management And Operation Fee',
+                )]
+            }
+        return res
 
 
 class SaleLayoutCustomGroup(models.Model):

@@ -20,7 +20,7 @@
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <field name="client_order_ref" position="after">
-                    <field name="quote_ref_id"/>
+                    <field name="quote_ref_id" options="{'no_open':True,'no_create':1,'no_create_edit':1}"/>
                 </field>
                 <xpath expr="//page[@string='Other Information']/group/group/field[@name='user_id']" position="before">
                     <field name="approval_id"/>
