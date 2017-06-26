@@ -26,7 +26,7 @@ class sale_order(models.Model):
     )
     unrevisioned_name = fields.Char(
         string='Order Reference',
-        copy=True,
+        copy=False,
         readonly=True,
     )
     active = fields.Boolean(
@@ -70,44 +70,62 @@ class sale_order(models.Model):
         old_revision.message_post(body=msg)
         return action
 
-    @api.returns('self', lambda value: value.id)
     @api.multi
     def copy(self, defaults=None):
-        copy_id = self
         context_update = {}
         if not defaults:
             defaults = {}
-        if self.env.context.get('new_sale_revision'):
-            prev_name = self.name
-            if self.current_revision_id:
-                current_quote = self.env['sale.order'].browse(self.current_revision_id.id)
-                revno = current_quote.revision_number
-                copy_id = current_quote
-                context_update = {
-                    'name': current_quote.name,
-                    'active': False,
-                    'state': 'cancel',
-                    'current_revision_id': self.current_revision_id.id,
-                    'unrevisioned_name': current_quote.unrevisioned_name,
-                    'revision_number': revno,
-                }
-                current_quote.write({'revision_number': revno + 1,
-                            'name': '%s-%02d' % (self.unrevisioned_name,
-                                                 revno + 1),
-                            })
-            else:
-                revno = self.revision_number
+        for order in self:
+            if order.env.context.get('new_sale_revision'):
+                prev_name = order.name
+                if order.current_revision_id:
+                    current_order = order.env['sale.order'].browse(
+                        order.current_revision_id.id)
+                    revno = current_order.revision_number
+                    for old_order in current_order.old_revision_ids:
+                        old_order.write({'current_revision_id': order.id})
+                    current_order.write({
+                        'current_revision_id': order.id,
+                        'active': False,
+                        'state': 'cancel',
+                    })
+                    order.write({
+                        'current_revision_id': None,
+                        'active': True,
+                        'state': 'draft',
+                    })
+                    new_revno = order.revision_number
+                else:
+                    revno = order.revision_number
+                    new_revno = revno
+                order.write({
+                    'revision_number': revno + 1,
+                    'name': '%s-%02d' % (order.unrevisioned_name, revno + 1),
+                })
                 context_update = {
                     'name': prev_name,
-                    'revision_number': revno,
-                    'active': False,
+                    'revision_number': new_revno,
                     'state': 'cancel',
-                    'current_revision_id': self.id,
-                    'unrevisioned_name': self.unrevisioned_name,
+                    'current_revision_id': order.id,
+                    'unrevisioned_name': order.unrevisioned_name,
                 }
-                self.write({'revision_number': revno + 1,
-                            'name': '%s-%02d' % (self.unrevisioned_name,
-                                                 revno + 1),
-                            })
-            defaults.update(context_update)
-        return super(sale_order, copy_id).copy(defaults)
+                defaults.update(context_update)
+        res = super(sale_order, self).copy(defaults)
+        res.write({'active': False})
+        return res
+
+    @api.multi
+    def order_revision_tree_view(self):
+        self.ensure_one()
+        domain = [
+            '&', ('current_revision_id', 'like', self.id),
+            '&', ('active', '=', False), ('state', '=', 'cancel'),
+        ]
+        return {
+            'name': _('Revision'),
+            'res_model': 'sale.order',
+            'type': 'ir.actions.act_window',
+            'views': [[False, "tree"], [False, "form"]],
+            'domain': domain,
+            'context': "{'active': False}"
+        }
