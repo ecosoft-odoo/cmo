@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api
+from openerp.tools.translate import _
 
 
 class StockPicking(models.Model):
@@ -83,3 +84,28 @@ class StockMove(models.Model):
                 move.product_uos_qty = res.get('product_uos_qty', False)
                 move.location_id = res.get('location_id', False)
                 move.location_dest_id = res.get('location_dest_id', False)
+
+
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    @api.multi
+    def action_picking_type_form(self):
+        user = self.env['res.users'].browse(self._uid)
+        domain = [(1, '=', 1)]
+        if user.has_group('cmo_stock.group_stock_wh_user'):
+            domain = ['|', ('name', '=', 'Receipts'),
+                           ('name', '=', 'Issue Stock')]
+        elif user.has_group('cmo_stock.group_stock_readonly'):
+            domain = [('name', '=', 'Issue Stock')]
+        elif user.has_group('stock.group_stock_user') and \
+                not user.has_group('stock.group_stock_manager'):
+            domain = [('name', '=', 'Issue Stock')]
+        return {
+            'name': _('All Operations'),
+            'res_model': 'stock.picking.type',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'kanban,form',
+            'domain': domain
+        }
