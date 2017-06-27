@@ -15,6 +15,8 @@
         'stock_account',
     ],
     "data": [
+        'security/cmo_stock_security.xml',
+        'security/ir.model.access.csv',
         'views/stock_view.xml',
         'views/report_stockpicking.xml',
         'views/stock_report.xml',
