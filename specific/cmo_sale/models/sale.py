@@ -203,19 +203,19 @@ class SaleOrderLine(models.Model):
         res = {}
         if self.order_lines_group == 'before':
             res['domain'] = {
-                'product_id': [(
-                    'sale_layout_cat_id',
-                    'not like',
-                    'Management And Operation Fee',
-                )]
+                'product_id': [
+                    '&',
+                    ('management_fee', '=', False),
+                    ('sale_ok', '=', True),
+                ]
             }
         elif self.order_lines_group == 'manage_fee':
             res['domain'] = {
-                'product_id': [(
-                    'sale_layout_cat_id',
-                    'like',
-                    'Management And Operation Fee',
-                )]
+                'product_id': [
+                    '&',
+                    ('management_fee', '=', True),
+                    ('sale_ok', '=', True),
+                ]
             }
         return res
 
