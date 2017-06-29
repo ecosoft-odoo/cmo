@@ -43,6 +43,9 @@ class PurchaseOrder(models.Model):
                 'done': [('readonly', True)]},
         copy=True,
     )
+    operating_unit_id = fields.Many2one(
+        change_default=True,
+    )
 
     @api.onchange('order_ref')
     def _onchange_order_id(self):
