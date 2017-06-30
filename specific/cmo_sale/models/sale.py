@@ -89,6 +89,11 @@ class SaleOrder(models.Model):
         string='Approval',
         states={'done': [('readonly', True)]},
     )
+    margin_percentage = fields.Float(
+        string='Margin Percentage (%)',
+        readonly=True,
+        compute='_compute_margin_percentage',
+    )
 
     @api.multi
     @api.depends('amount_before_management_fee')
@@ -145,6 +150,12 @@ class SaleOrder(models.Model):
         )
         return sum(lines.mapped('price_subtotal'))
 
+    @api.multi
+    def _compute_margin_percentage(self):
+        for order in self:
+            if order.amount_untaxed != 0:
+                order.margin_percentage = order.margin * 100 /\
+                    order.amount_untaxed
 
 
 class SaleOrderLine(models.Model):

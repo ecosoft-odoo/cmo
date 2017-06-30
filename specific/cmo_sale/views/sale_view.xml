@@ -27,6 +27,12 @@
                 </xpath>
                 <field name="note" position="replace">
                     <group>
+                        <label for="margin_percentage"/>
+                        <div name="margin_percentage">
+                            <field name="margin_percentage" class="oe_inline"/> %%
+                        </div>
+                    </group>
+                    <group>
                         <field name="note" string="Remark"/>
                     </group>
                 </field>
@@ -100,7 +106,10 @@
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='purchase_price']" position="after">
                     <field name="sale_order_line_margin"/>
-                    <field name="so_line_percent_margin"/>
+                    <label for="so_line_percent_margin"/>
+                    <div name="so_line_percent_margin">
+                        <field name="so_line_percent_margin" class="oe_inline"/> %%
+                    </div>
                 </xpath>
             </field>
         </record>
