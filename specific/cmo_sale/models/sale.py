@@ -128,11 +128,23 @@ class SaleOrder(models.Model):
             raise ValidationError("Must have at least 1 order line!")
         else:
             for line in self.order_line:
-                if (line.price_unit <= 0) or (line.product_uom_qty <= 0):
+                if ((line.price_unit <= 0) or (line.product_uom_qty <= 0)) and \
+                   (line.order_lines_group == 'before'):
                     raise ValidationError(
                         "Unit Price and Quantity in order \
                         line must more than zero !"
                     )
+
+    @api.multi
+    def _get_amount_by_custom_group(self, custom_group):
+        self.ensure_one()
+        lines = self.order_line.filtered(
+            lambda r:
+            (r.order_lines_group == 'before') and
+            (r.sale_layout_custom_group_id.id == custom_group.id)
+        )
+        return sum(lines.mapped('price_subtotal'))
+
 
 
 class SaleOrderLine(models.Model):
