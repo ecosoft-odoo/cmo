@@ -229,6 +229,16 @@ class SaleOrderLine(models.Model):
                     ('sale_ok', '=', True),
                 ]
             }
+            default_product = self.env['product.template'].search([
+                '&',
+                ('management_fee', '=', True),
+                ('sale_ok', '=', True),
+            ])
+            if default_product:
+                self.product_id = default_product[0].id
+        self.product_uom_qty = 1
+        self.price_unit = 0
+        self.purchase_price = 0
         return res
 
 
