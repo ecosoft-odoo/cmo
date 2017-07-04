@@ -13,6 +13,8 @@
         'sale_layout',
         'sale_stock',
         'sale_margin',
+        'sale_invoice_plan',
+        'sale_split_quote2order',
     ],
     'data': [
         'security/security.xml',

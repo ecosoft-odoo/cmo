@@ -47,16 +47,19 @@ class SaleOrder(models.Model):
         'project.project',
         string='Project',
         states={'done': [('readonly', True)]},
+        required=True,
     )
     event_date_description = fields.Char(
         string='Event Date',
         size=250,
         states={'done': [('readonly', True)]},
+        required=True,
     )
     venue_description = fields.Char(
         string='Venue',
         size=250,
         states={'done': [('readonly', True)]},
+        required=True,
     )
     amount_before_management_fee = fields.Float(
         string="Before Management Fee",
@@ -76,11 +79,20 @@ class SaleOrder(models.Model):
         'sale.order',
         string='Ref.Quotation',
         states={'done': [('readonly', True)]},
+        domain=[
+            '&', ('order_type', 'like', 'quotation'),
+            ('state', 'not like', 'cancel'),
+        ],
     )
     approval_id = fields.Many2one(
         'res.users',
         string='Approval',
         states={'done': [('readonly', True)]},
+    )
+    margin_percentage = fields.Float(
+        string='Margin Percentage (%)',
+        readonly=True,
+        compute='_compute_margin_percentage',
     )
 
     @api.multi
@@ -113,6 +125,38 @@ class SaleOrder(models.Model):
         covenants = Description.search([('active', '=', True), ])
         return covenants and covenants[0].description or False
 
+    @api.multi
+    @api.constrains('order_line')
+    def _constrains_order_line(self):
+        self.ensure_one()
+        if not self.order_line:
+            raise ValidationError("Must have at least 1 order line!")
+        else:
+            for line in self.order_line:
+                if ((line.price_unit <= 0) or (line.product_uom_qty <= 0)) and \
+                   (line.order_lines_group == 'before'):
+                    raise ValidationError(
+                        "Unit Price and Quantity in order \
+                        line must more than zero !"
+                    )
+
+    @api.multi
+    def _get_amount_by_custom_group(self, custom_group):
+        self.ensure_one()
+        lines = self.order_line.filtered(
+            lambda r:
+            (r.order_lines_group == 'before') and
+            (r.sale_layout_custom_group_id.id == custom_group.id)
+        )
+        return sum(lines.mapped('price_subtotal'))
+
+    @api.multi
+    def _compute_margin_percentage(self):
+        for order in self:
+            if order.amount_untaxed != 0:
+                order.margin_percentage = order.margin * 100 /\
+                    order.amount_untaxed
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -123,6 +167,7 @@ class SaleOrderLine(models.Model):
         ],
         string='Group',
         default='before',
+        required=True,
     )
     sale_layout_custom_group_id = fields.Many2one(
         'sale_layout.custom_group',
@@ -146,6 +191,11 @@ class SaleOrderLine(models.Model):
          ('F', 'F'),
         ],
         string='Section Code',
+        required=True,
+    )
+    product_id = fields.Many2one(
+        'product.product',
+        required=True,
     )
 
     @api.multi
@@ -170,6 +220,37 @@ class SaleOrderLine(models.Model):
             line.so_line_percent_margin = \
                 (line.price_unit - line.purchase_price) * 100.0 / \
                 (line.price_unit or 1.0)
+
+    @api.onchange('order_lines_group')
+    def _onchange_order_lines_group(self):
+        res = {}
+        if self.order_lines_group == 'before':
+            res['domain'] = {
+                'product_id': [
+                    '&',
+                    ('management_fee', '=', False),
+                    ('sale_ok', '=', True),
+                ]
+            }
+        elif self.order_lines_group == 'manage_fee':
+            res['domain'] = {
+                'product_id': [
+                    '&',
+                    ('management_fee', '=', True),
+                    ('sale_ok', '=', True),
+                ]
+            }
+            default_product = self.env['product.template'].search([
+                '&',
+                ('management_fee', '=', True),
+                ('sale_ok', '=', True),
+            ])
+            if default_product:
+                self.product_id = default_product[0].id
+        self.product_uom_qty = 1
+        self.price_unit = 0
+        self.purchase_price = 0
+        return res
 
 
 class SaleLayoutCustomGroup(models.Model):
