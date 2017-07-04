@@ -98,6 +98,9 @@
 	<field name="jop_title" class="java.lang.String">
 		<fieldDescription><![CDATA[approve_ids/job_id/name]]></fieldDescription>
 	</field>
+	<field name="product_name" class="java.lang.String">
+		<fieldDescription><![CDATA[order_line/product_id/name]]></fieldDescription>
+	</field>
 	<variable name="string_amount_total" class="java.lang.String">
 		<variableExpression><![CDATA[(Math.round($F{amount_total}*100)/100).toString()]]></variableExpression>
 	</variable>
@@ -450,7 +453,7 @@
 				<textElement verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="Monospaced" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{product_name} + " " + $F{description}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement style="detail" mode="Transparent" x="315" y="10" width="80" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
