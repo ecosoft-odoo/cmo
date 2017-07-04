@@ -65,6 +65,9 @@
                     <attribute name="context">{'po_type': po_type}</attribute>
                     <attribute name="options">{'no_open': True, 'no_create': True, 'no_create_edit': True}</attribute>
                 </field>
+                <field name="product_qty" position="attributes">
+                    <attribute name="string">QTY</attribute>
+                </field>
             </field>
         </record>
         <record id="purchase_order_tree" model="ir.ui.view">
@@ -77,6 +80,7 @@
                 </field>
                 <field name="origin" position="after">
                     <field name="project_id"/>
+                    <field name="order_ref" string="Sale Quotation"/>
                 </field>
             </field>
         </record>
