@@ -47,6 +47,22 @@ class PurchaseOrder(models.Model):
         change_default=True,
     )
 
+    @api.onchange('po_type')
+    def _onchange_po_type(self):
+        self.project_id = False
+        self.order_ref = False
+        self.event_date_description = False
+        self.venue_description = False
+        self.order_line = False
+
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
+        self.order_ref = False
+        self.event_date_description = False
+        self.venue_description = False
+        for line in self.order_line:
+            line.product_ref = False
+
     @api.onchange('order_ref')
     def _onchange_order_id(self):
         self.event_date_description = self.order_ref.event_date_description
@@ -70,24 +86,6 @@ class PurchaseOrder(models.Model):
         #     context = context
         # window.write({'context': context})
 
-    @api.onchange('project_id')
-    def _onchange_project_id(self):
-        self.order_ref = False
-        self.event_date_description = False
-        self.venue_description = False
-        for line in self.order_line:
-            line.product_ref = False
-
-    @api.onchange('po_type')
-    def _onchange_po_type(self):
-        self.project_id = False
-        self.order_ref = False
-        self.event_date_description = False
-        self.venue_description = False
-        # self.with_context({'test': 1}).order_line = self.order_line
-        # self.order_line = [(6, 0, [])]
-        # self.order_line2 = [(6, 0, [])]
-
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
@@ -95,4 +93,7 @@ class PurchaseOrderLine(models.Model):
     product_ref = fields.Many2one(
         'product.product',
         string='Product Ref',
+    )
+    date_planned = fields.Date(
+        required=False,
     )
