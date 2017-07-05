@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from . import models, fields
+from openerp import models, fields
 
 
 class PurchaseCreateInvoicePlan(models.Model):
