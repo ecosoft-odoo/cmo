@@ -49,6 +49,7 @@
                   id="menu_action_sale_covenant_description_form"
                   parent="base.menu_base_config"
                   sequence="50"
+                  groups="base.group_sale_manager"
                   />
     </data>
 </openerp>
