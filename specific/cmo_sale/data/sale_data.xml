@@ -10,5 +10,29 @@
 3. 30 days Before Event Date is 50% of the Total amount in Quotation or contract
             </field>
         </record>
+        <record id="seq_type_cmo_quote" model="ir.sequence.type">
+            <field name="name">CMO Quotation</field>
+            <field name="code">cmo.quotation</field>
+        </record>
+        <record id="seq_cmo_quotation" model="ir.sequence">
+            <field name="name">CMO Quotation (CMO)</field>
+            <field name="code">cmo.quotation</field>
+            <field name="prefix">QOCM%(fy)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+            <field name="implementation">no_gap</field>
+        </record>
+        <record id="seq_type_cmo_sale_order" model="ir.sequence.type">
+            <field name="name">CMO Sale Order</field>
+            <field name="code">cmo.sale_order</field>
+        </record>
+        <record id="seq_cmo_sale_order" model="ir.sequence">
+            <field name="name">CMO Sale Order (CMO)</field>
+            <field name="code">cmo.sale_order</field>
+            <field name="prefix">SOCM%(fy)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+            <field name="implementation">no_gap</field>
+        </record>
     </data>
 </openerp>
