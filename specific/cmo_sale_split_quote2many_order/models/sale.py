@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import datetime
+
 from openerp import api, fields, models, _
 from openerp.tools.float_utils import float_round as round
 import openerp.addons.decimal_precision as dp
@@ -85,13 +87,28 @@ class sale_order(models.Model):
             if self.sale_order_mode == 'change_quantity':
                 for line in self.order_line:
                     new_quantity = amount_price / self.amount_untaxed
-                    line.write({'product_uom_qty': new_quantity})
+                    line.write({
+                        'product_uom_qty': new_quantity,
+                        'purchase_price': 0.0,
+                        })
             elif self.sale_order_mode == 'change_price':
-                for line in self.order_line:
+                lines = self.order_line[:-1]
+                last_line = self.order_line[-1]
+                line_amount = 0
+                for line in lines:
                     new_price_unit = line.price_unit * \
-                        (amount_price / self.amount_untaxed) / \
-                        line.product_uom_qty
-                    line.write({'price_unit': new_price_unit})
+                        round((amount_price / self.amount_untaxed) / \
+                        line.product_uom_qty, 2)
+                    line_amount += new_price_unit
+                    line.write({
+                        'price_unit': new_price_unit,
+                        'purchase_price': 0.0,
+                        })
+                last_price_unit = amount_price - line_amount
+                last_line.write({
+                    'price_unit': last_price_unit,
+                    'purchase_price': 0.0,
+                    })
         self._amount_all()
 
     @api.multi
@@ -116,15 +133,21 @@ class sale_order(models.Model):
         for order in self:
             if self.use_multi_customer and self.order_plan_ids:
                 order_plan = self.validate_sale_order_plan()
+                ctx = self._context.copy()
+                current_date = datetime.date.today()
+                fiscalyear_id = self.env['account.fiscalyear'].find(dt=current_date)
+                ctx["fiscalyear_id"] = fiscalyear_id
                 for plan in order_plan:
                     new_sale_order = order.copy({
-                        'name': self.env['ir.sequence'].get('sale.order')
-                                or '/',
+                        'name': self.env['ir.sequence'].with_context(ctx)\
+                                    .get('cmo.sale_order') or '/',
                         'order_type': 'sale_order',
                         'quote_id': self.id,
                         'client_order_ref': self.client_order_ref,
                         'partner_id': plan.customer_id.id,
+                        'discount_rate': 0.0
                     })
+                    new_sale_order.write({'active':True})
                     if self.use_merge:
                         new_sale_order.merge_sale_order_line(
                             plan.sale_order_amount)
