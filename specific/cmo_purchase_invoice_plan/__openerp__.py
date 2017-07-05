@@ -14,11 +14,8 @@ Purchase Invoice Plan
         'purchase_invoice_plan',
     ],
     'demo': [],
-    'data': [
-        'base',
-    ],
-    'test': [
-    ],
+    'data': [],
+    'test': [],
     'auto_install': False,
     'application': True,
     'installable': True,
