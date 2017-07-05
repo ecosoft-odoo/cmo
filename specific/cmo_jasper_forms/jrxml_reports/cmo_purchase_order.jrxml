@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cmo_purchase_order" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.2100000000000017"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="43"/>
 	<property name="ireport.y" value="0"/>
 	<property name="OPENERP_RELATIONS" value="[&quot;order_line&quot;]"/>
 	<style name="column_header">
@@ -42,7 +42,7 @@
 		<fieldDescription><![CDATA[partner_ref]]></fieldDescription>
 	</field>
 	<field name="project_name" class="java.lang.String">
-		<fieldDescription><![CDATA[project_id/name]]></fieldDescription>
+		<fieldDescription><![CDATA[project_id/analytic_account_id/name]]></fieldDescription>
 	</field>
 	<field name="venue_description" class="java.lang.String">
 		<fieldDescription><![CDATA[venue_description]]></fieldDescription>
@@ -99,7 +99,7 @@
 		<fieldDescription><![CDATA[approve_ids/job_id/name]]></fieldDescription>
 	</field>
 	<field name="project_number" class="java.lang.String">
-		<fieldDescription><![CDATA[project_id/name]]></fieldDescription>
+		<fieldDescription><![CDATA[project_id/project_number]]></fieldDescription>
 	</field>
 	<variable name="string_amount_total" class="java.lang.String">
 		<variableExpression><![CDATA[(Math.round($F{amount_total}*100)/100).toString()]]></variableExpression>
@@ -410,7 +410,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="Monospaced" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{project_name}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{project_number}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
