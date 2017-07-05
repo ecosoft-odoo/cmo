@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 
 from openerp import fields, models, api, _
 from openerp.exceptions import ValidationError
@@ -94,6 +95,20 @@ class SaleOrder(models.Model):
         readonly=True,
         compute='_compute_margin_percentage',
     )
+
+    @api.model
+    def create(self, vals):
+        if (vals.get('order_type', False) or
+            self._context.get('order_type', False)) == 'quotation' \
+                and vals.get('name', '/') == '/':
+            ctx = self._context.copy()
+            current_date = datetime.date.today()
+            fiscalyear_id = self.env['account.fiscalyear'].find(dt=current_date)
+            ctx["fiscalyear_id"] = fiscalyear_id
+            vals['name'] = self.env['ir.sequence']\
+                .with_context(ctx).get('cmo.quotation') # create sequence number
+        new_order = super(SaleOrder, self).create(vals)
+        return new_order
 
     @api.multi
     @api.depends('amount_before_management_fee')
