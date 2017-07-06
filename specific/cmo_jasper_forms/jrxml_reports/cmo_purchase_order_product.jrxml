@@ -401,7 +401,8 @@
     $F{township_name},
     $F{district_name},
     $F{province_name},
-    $F{zip})]]></textFieldExpression>
+    $F{zip},
+    null)]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement mode="Transparent" x="318" y="57" width="100" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
