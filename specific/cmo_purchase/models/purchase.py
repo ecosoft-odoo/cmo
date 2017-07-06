@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api
-# import json
 
 
 class PurchaseOrder(models.Model):
@@ -36,13 +35,6 @@ class PurchaseOrder(models.Model):
         string='PO Approve',
         required=True,
     )
-    order_line2 = fields.One2many(
-        'purchase.order.line', 'order_id',
-        string='Order Lines',
-        states={'approved': [('readonly', True)],
-                'done': [('readonly', True)]},
-        copy=True,
-    )
     operating_unit_id = fields.Many2one(
         change_default=True,
     )
@@ -69,22 +61,6 @@ class PurchaseOrder(models.Model):
         self.venue_description = self.order_ref.venue_description
         for line in self.order_line:
             line.product_ref = False
-
-        # Add context for required fields in one2many
-        # window = self.env.ref("purchase.purchase_form_action")
-        # context = window.context
-        # context = context.replace("'", '"')
-        # try:
-        #     context = json.loads(context)
-        #     print context
-        #     if self.po_type == 'po_project' and self.order_ref:
-        #         context["require_product_ref"] = 1
-        #     else:
-        #         context["require_product_ref"] = 0
-        #     context = json.dumps(context).replace('"', "'")
-        # except:
-        #     context = context
-        # window.write({'context': context})
 
     @api.model
     def create(self, vals):
