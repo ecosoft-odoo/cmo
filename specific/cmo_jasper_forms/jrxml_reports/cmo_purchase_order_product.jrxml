@@ -104,6 +104,9 @@
 	<field name="product_name" class="java.lang.String">
 		<fieldDescription><![CDATA[order_line/product_id/name]]></fieldDescription>
 	</field>
+	<field name="township_name" class="java.lang.String">
+		<fieldDescription><![CDATA[partner_id/township_id/name]]></fieldDescription>
+	</field>
 	<variable name="string_amount_total" class="java.lang.String">
 		<variableExpression><![CDATA[(Math.round($F{amount_total}*100)/100).toString()]]></variableExpression>
 	</variable>
@@ -395,10 +398,9 @@
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[(new Scriptlet()).getAddress(
     $F{street},
-    $F{street2},
-    $F{city},
-    $F{province_name},
+    $F{township_name},
     $F{district_name},
+    $F{province_name},
     $F{zip})]]></textFieldExpression>
 			</textField>
 			<staticText>
