@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cmo_sale_order_eng" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="0.9090909090909091"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="189"/>
+	<property name="ireport.y" value="165"/>
 	<property name="OPENERP_RELATIONS" value="[&quot;order_line&quot;]"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
 	<queryString language="xPath">
@@ -84,8 +84,7 @@
 		<fieldDescription><![CDATA[discount_rate]]></fieldDescription>
 	</field>
 	<field name="custom_group" class="java.lang.String">
-		<fieldDescription><![CDATA[order_line/sale_layout_custom_group_id/name
-]]></fieldDescription>
+		<fieldDescription><![CDATA[order_line/sale_layout_custom_group_id/name]]></fieldDescription>
 	</field>
 	<variable name="sum total section" class="java.lang.Float" resetType="Group" resetGroup="section" calculation="Sum">
 		<variableExpression><![CDATA[($F{sub total} > 0) == true ? $F{sub total}: 0.0]]></variableExpression>
@@ -96,72 +95,25 @@
 	<group name="Custom">
 		<groupExpression><![CDATA[$F{custom_group}]]></groupExpression>
 		<groupHeader>
-			<band height="20">
+			<band height="21">
 				<textField isBlankWhenNull="true">
-					<reportElement isPrintRepeatedValues="false" x="11" y="0" width="276" height="20" isRemoveLineWhenBlank="true"/>
+					<reportElement isPrintRepeatedValues="false" x="10" y="0" width="276" height="20" isRemoveLineWhenBlank="true"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{custom_group}]]></textFieldExpression>
 				</textField>
 			</band>
-			<band height="41">
-				<textField>
-					<reportElement isPrintRepeatedValues="false" mode="Opaque" x="0" y="0" width="454" height="20" isRemoveLineWhenBlank="true" backcolor="#5FE9FE"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "   1) The scope of services, services fees" :
-"   1) ขอบเขตของการให้บริการและค่าบริการในการดำเนินการ"]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement isPrintRepeatedValues="false" mode="Opaque" x="454" y="0" width="100" height="20" isRemoveLineWhenBlank="true" backcolor="#5FE9FE"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Bath" : "บาท"]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement isPrintRepeatedValues="false" mode="Opaque" x="354" y="20" width="100" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Unit Price" : "ราคาต่อหน่วย"]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement isPrintRepeatedValues="false" mode="Opaque" x="454" y="20" width="100" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Price" : "ราคา"]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement isPrintRepeatedValues="false" mode="Opaque" x="0" y="20" width="34" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "No." : "ลำดับ"]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement isPrintRepeatedValues="false" mode="Opaque" x="321" y="20" width="34" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Qty" : "จำนวน"]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement isPrintRepeatedValues="false" mode="Opaque" x="34" y="20" width="287" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Description" : "รายละเอียด"]]></textFieldExpression>
-				</textField>
-			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="25">
+			<band height="24">
+				<line>
+					<reportElement x="454" y="22" width="100" height="1" printWhenGroupChanges="Custom">
+						<printWhenExpression><![CDATA[($F{group} == "before") == true]]></printWhenExpression>
+					</reportElement>
+				</line>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00;#,##0.00-" isBlankWhenNull="true">
-					<reportElement x="455" y="0" width="100" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+					<reportElement x="454" y="-1" width="100" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Custom"/>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 					</box>
@@ -171,7 +123,7 @@
 					<textFieldExpression class="java.lang.Float"><![CDATA[($F{group} == "before") == true ? $V{sum total group} : null]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="310" y="0" width="137" height="20" isRemoveLineWhenBlank="true"/>
+					<reportElement x="309" y="-1" width="137" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Custom"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 					</textElement>
@@ -179,11 +131,6 @@
 $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  : "รวมค่าใช้จ่ายข้อ A - " + $F{section code}
 : null]]></textFieldExpression>
 				</textField>
-				<line>
-					<reportElement x="455" y="23" width="100" height="1">
-						<printWhenExpression><![CDATA[($F{group} == "before") == true]]></printWhenExpression>
-					</reportElement>
-				</line>
 			</band>
 		</groupFooter>
 	</group>
@@ -208,7 +155,7 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="27">
+			<band height="26">
 				<textField isStretchWithOverflow="true" pattern="#,##0.00;#,##0.00-" isBlankWhenNull="true">
 					<reportElement x="455" y="1" width="100" height="20" isPrintWhenDetailOverflows="true"/>
 					<box>
@@ -235,7 +182,7 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 					<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total" : " รวมค่าใช้จ่ายข้อ"]]></textFieldExpression>
 				</textField>
 				<line>
-					<reportElement x="455" y="24" width="100" height="1"/>
+					<reportElement x="455" y="24" width="100" height="1" printWhenGroupChanges="Custom"/>
 				</line>
 			</band>
 		</groupFooter>
@@ -244,7 +191,7 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="277" splitType="Stretch">
+		<band height="315" splitType="Stretch">
 			<textField>
 				<reportElement x="446" y="47" width="111" height="20"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -375,6 +322,56 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "CMO PLC. here in after referred to as “Company” agrees to provide services to Client" :
 "บริษัท ซีเอ็มโอ จำกัด (มหาชน) ตกลงให้บริการแก่ท่าน โดยมีรายละเอียดของการดำเนินการและค่าบริการดังต่อไปนี้"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" mode="Opaque" x="0" y="274" width="454" height="20" isRemoveLineWhenBlank="true" backcolor="#5FE9FE"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "   1) The scope of services, services fees" :
+"   1) ขอบเขตของการให้บริการและค่าบริการในการดำเนินการ"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" mode="Opaque" x="454" y="274" width="100" height="20" isRemoveLineWhenBlank="true" backcolor="#5FE9FE"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Bath" : "บาท"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" mode="Opaque" x="354" y="294" width="100" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Unit Price" : "ราคาต่อหน่วย"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" mode="Opaque" x="454" y="294" width="100" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Price" : "ราคา"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" mode="Opaque" x="0" y="294" width="34" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "No." : "ลำดับ"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" mode="Opaque" x="321" y="294" width="34" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Qty" : "จำนวน"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" mode="Opaque" x="34" y="294" width="287" height="20" isRemoveLineWhenBlank="true" backcolor="#F9FE3B"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{REPORT_LOCALE}.toString() == "en_US" ? "Description" : "รายละเอียด"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
