@@ -14,7 +14,9 @@ Purchase Invoice Plan
         'purchase_invoice_plan',
     ],
     'demo': [],
-    'data': [],
+    'data': [
+        'security/ir.module.access.csv',
+    ],
     'test': [],
     'auto_install': False,
     'application': True,
