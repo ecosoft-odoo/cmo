@@ -172,7 +172,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="Monospaced" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<text><![CDATA[1. วางบิลกับการเงินทุกวันพุธที่ 1 และ > ของเดือน]]></text>
+				<text><![CDATA[1. วางบิลกับการเงินทุกวันพุธที่ 1 และ 3 ของเดือน]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="detail" mode="Transparent" x="0" y="693" width="555" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
