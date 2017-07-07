@@ -10,7 +10,7 @@
                     <field name="project_related_id" string="Project Name"/>
                 </xpath>
                 <xpath expr="//field[@name='amount_total']" position="before">
-                    <field name="amount_untaxed" string="Untaxed"/>
+                    <field name="amount_untaxed" string="Untaxed" sum="Total Amount Untaxed"/>
                 </xpath>
                 <xpath expr="//field[@name='state']" position="attributes">
                     <attribute name="string">State</attribute>
