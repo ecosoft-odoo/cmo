@@ -11,6 +11,8 @@
             <field name="arch" type="xml">
                 <xpath expr="//group" position="inside">
                     <filter string="Operating Unit" icon="terp-accessories-archiver" context="{'group_by':'operating_unit_id'}"/>
+                    <filter string="Partner" icon="terp-accessories-archiver" context="{'group_by':'partner_id'}"/>
+                    <filter string="Operation Date" icon="terp-accessories-archiver" context="{'group_by':'date'}"/>
                 </xpath>
             </field>
         </record>

@@ -17,6 +17,17 @@
             </field>
         </record>
 
+        <record id="view_picking_internal_search" model="ir.ui.view">
+            <field name="name">stock.picking.internal.search</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <group position="inside">
+                    <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                </group>
+            </field>
+        </record>
+
         <record id="view_move_stock_picking_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
             <field name="model">stock.move</field>
