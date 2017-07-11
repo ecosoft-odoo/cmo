@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cmo_sale_order_eng" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="0.9090909090909091"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="165"/>
+	<property name="ireport.y" value="232"/>
 	<property name="OPENERP_RELATIONS" value="[&quot;order_line&quot;]"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
 	<queryString language="xPath">
@@ -89,8 +89,8 @@
 	<variable name="sum total section" class="java.lang.Float" resetType="Group" resetGroup="section" calculation="Sum">
 		<variableExpression><![CDATA[($F{sub total} > 0) == true ? $F{sub total}: 0.0]]></variableExpression>
 	</variable>
-	<variable name="sum total group" class="java.lang.Float" resetType="Group" resetGroup="Custom" calculation="Sum">
-		<variableExpression><![CDATA[($F{sub total} > 0) == true ? $F{sub total}: 0.0]]></variableExpression>
+	<variable name="sum total group" class="java.lang.Float" resetType="Group" resetGroup="Custom" incrementType="Group" incrementGroup="section" calculation="Sum">
+		<variableExpression><![CDATA[($F{sub total} > 0) == true ? $V{sum total section}: 0.0]]></variableExpression>
 	</variable>
 	<group name="Custom">
 		<groupExpression><![CDATA[$F{custom_group}]]></groupExpression>
@@ -106,14 +106,14 @@
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="24">
+			<band height="53">
 				<line>
-					<reportElement x="454" y="22" width="100" height="1" printWhenGroupChanges="Custom">
+					<reportElement x="454" y="48" width="100" height="1" printWhenGroupChanges="Custom">
 						<printWhenExpression><![CDATA[($F{group} == "before") == true]]></printWhenExpression>
 					</reportElement>
 				</line>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00;#,##0.00-" isBlankWhenNull="true">
-					<reportElement x="454" y="-1" width="100" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Custom"/>
+					<reportElement x="454" y="25" width="100" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Custom"/>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 					</box>
@@ -123,7 +123,7 @@
 					<textFieldExpression class="java.lang.Float"><![CDATA[($F{group} == "before") == true ? $V{sum total group} : null]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="309" y="-1" width="137" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Custom"/>
+					<reportElement x="309" y="25" width="137" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Custom"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 					</textElement>
@@ -131,6 +131,30 @@
 $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  : "รวมค่าใช้จ่ายข้อ A - " + $F{section code}
 : null]]></textFieldExpression>
 				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="287" y="0" width="159" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Custom"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{group} == "manage_fee") == true ?
+$P{REPORT_LOCALE}.toString() == "en_US" ? "Before Management Fee" : "รวมค่าใช้จ่ายก่อนบริหารจัดการ"
+: null]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;#,##0.00-" isBlankWhenNull="true">
+					<reportElement x="454" y="0" width="100" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Custom"/>
+					<box>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Float"><![CDATA[($F{group} == "manage_fee") == true ? $F{amount bf discount} - $V{sum total section}  : null]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="454" y="23" width="100" height="1" printWhenGroupChanges="Custom">
+						<printWhenExpression><![CDATA[($F{group} == "manage_fee") == true]]></printWhenExpression>
+					</reportElement>
+				</line>
 			</band>
 		</groupFooter>
 	</group>
@@ -435,7 +459,7 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 		<band splitType="Prevent"/>
 	</lastPageFooter>
 	<summary>
-		<band height="750" splitType="Stretch">
+		<band height="750" splitType="Immediate">
 			<textField isStretchWithOverflow="true">
 				<reportElement x="16" y="172" width="427" height="90" isPrintWhenDetailOverflows="true"/>
 				<box topPadding="3"/>
@@ -561,7 +585,7 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;#,##0.00-" isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="425" y="100" width="128" height="20" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Custom"/>
+				<reportElement isPrintRepeatedValues="false" x="425" y="100" width="128" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Custom"/>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 				</box>
@@ -571,7 +595,7 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 				<textFieldExpression class="java.lang.Float"><![CDATA[$F{amount total}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;#,##0.00-" isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="425" y="80" width="128" height="20" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Custom"/>
+				<reportElement isPrintRepeatedValues="false" x="425" y="80" width="128" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Custom"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
@@ -581,7 +605,7 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 				<textFieldExpression class="java.lang.Float"><![CDATA[$F{amount tax}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;#,##0.00-" isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="425" y="60" width="128" height="20" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Custom"/>
+				<reportElement isPrintRepeatedValues="false" x="425" y="60" width="128" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Custom"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
@@ -591,7 +615,7 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 				<textFieldExpression class="java.lang.Float"><![CDATA[$F{amount untaxed}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;#,##0.00-" isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="427" y="40" width="126" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Custom"/>
+				<reportElement isPrintRepeatedValues="false" x="427" y="40" width="126" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Custom"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
@@ -631,7 +655,7 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 "ภาษี  :"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement isPrintRepeatedValues="false" x="309" y="100" width="110" height="20" printWhenGroupChanges="Custom"/>
+				<reportElement isPrintRepeatedValues="false" x="308" y="100" width="111" height="20" printWhenGroupChanges="Custom"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 				</textElement>
@@ -642,13 +666,16 @@ $P{REPORT_LOCALE}.toString() == "en_US" ? "Sub Total A - " + $F{section code}  :
 				<reportElement isPrintRepeatedValues="false" x="425" y="123" width="128" height="1" printWhenGroupChanges="Custom"/>
 			</line>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;#,##0.00-" isBlankWhenNull="true">
-				<reportElement isPrintRepeatedValues="false" x="426" y="19" width="127" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" printWhenGroupChanges="Custom"/>
+				<reportElement isPrintRepeatedValues="false" x="426" y="19" width="127" height="20" isRemoveLineWhenBlank="true" printWhenGroupChanges="Custom"/>
 				<box>
 					<bottomPen lineWidth="0.75"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression class="java.lang.Float"><![CDATA[($F{discount rate} != 0.0) == true ? $F{amount bf discount} : null]]></textFieldExpression>
 			</textField>
+			<break>
+				<reportElement isPrintRepeatedValues="false" x="0" y="141" width="100" height="1"/>
+			</break>
 		</band>
 	</summary>
 	<noData>
