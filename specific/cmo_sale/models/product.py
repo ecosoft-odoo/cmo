@@ -10,3 +10,6 @@ class ProductTemplate(models.Model):
         'sale_layout.category',
         string='Section',
     )
+    management_fee = fields.Boolean(
+        string='Management Fee',
+    )

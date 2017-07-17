@@ -11,6 +11,10 @@
                     <label for="Section" string="Section"/>
                     <field name="sale_layout_cat_id" class="oe_inline" />
                 </div>
+                <div class="oe_left" name="sale_layout_cat">
+                    <label for="Management Fee" string="Management Fee"/>
+                    <field name="management_fee" class="oe_inline" />
+                </div>
             </xpath>
         </field>
     </record>
