@@ -53,9 +53,9 @@
                     <field name="project_number" string="Project Number" attrs="{'invisible': [('state','not in',('draft','sent'))]}" readonly="1"/>
                 </field>
                 <xpath expr="///field[@name='project_id']" position="before">
-                    <field name="project_related_id"/>
-                    <field name="event_date_description" style="width:150%"/>
-                    <field name="venue_description" style="width:150%"/>
+                    <field name="project_related_id" attrs="{'readonly': [('order_type','=','sale_order')]}"/>
+                    <field name="event_date_description" style="width:150%" attrs="{'readonly': [('order_type','=','sale_order')]}"/>
+                    <field name="venue_description" style="width:150%" attrs="{'readonly': [('order_type','=','sale_order')]}"/>
                     <field name="amount_before_management_fee" invisible="1"/>
                 </xpath>
                 <xpath expr="///field[@name='project_id']" position="attributes">
