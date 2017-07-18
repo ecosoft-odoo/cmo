@@ -12,6 +12,7 @@
     "depends": [
         'account',
         'sale_layout',
+        'cmo_sale',
     ],
     "data": [
         'views/product_view.xml',
