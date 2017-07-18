@@ -125,7 +125,7 @@ class PurchaseCreateInvoicePlan(models.TransientModel):
         self.env['purchase.invoice.plan']._validate_installment_date(
             self.installment_ids)
         order = self.env['purchase.order'].browse(self._context['active_id'])
-        self._check_invoice_mode(order)
+        # self._check_invoice_mode(order)
         order.invoice_plan_ids.unlink()
         lines = []
 
