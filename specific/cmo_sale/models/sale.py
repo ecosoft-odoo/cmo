@@ -123,12 +123,14 @@ class SaleOrder(models.Model):
             ).mapped('price_unit'))
         self.amount_before_management_fee = total
 
+    @api.multi
     @api.onchange('project_related_id')
     def _onchange_project_number(self):
-        project = self.env['project.project']\
-            .browse(self.project_related_id.id)
-        self.project_id = project.analytic_account_id.id
-        self.project_number = project.project_number
+        for project in self:
+            Project = self.env['project.project']\
+                .browse(project.project_related_id.id)
+            project.project_id = Project.analytic_account_id.id
+            project.project_number = Project.project_number
 
     @api.multi
     @api.depends('project_number', 'project_related_id')
