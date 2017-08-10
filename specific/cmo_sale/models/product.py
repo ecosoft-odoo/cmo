@@ -12,4 +12,5 @@ class ProductTemplate(models.Model):
     )
     management_fee = fields.Boolean(
         string='Management Fee',
+        default=False,
     )

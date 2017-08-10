@@ -52,17 +52,17 @@
                 <field name="partner_id" position="before">
                     <field name="project_number" string="Project Number" attrs="{'invisible': [('state','not in',('draft','sent'))]}" readonly="1"/>
                 </field>
-                <xpath expr="///field[@name='project_id']" position="before">
+                <xpath expr="//field[@name='project_id']" position="before">
                     <field name="project_related_id" attrs="{'readonly': [('order_type','=','sale_order')]}"/>
                     <field name="event_date_description" style="width:150%" attrs="{'readonly': [('order_type','=','sale_order')]}"/>
                     <field name="venue_description" style="width:150%" attrs="{'readonly': [('order_type','=','sale_order')]}"/>
                     <field name="amount_before_management_fee" invisible="1"/>
                 </xpath>
-                <xpath expr="///field[@name='project_id']" position="attributes">
+                <xpath expr="//field[@name='project_id']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <field name="client_order_ref" position="after">
-                    <field name="quote_ref_id" options="{'no_open':True,'no_create':1,'no_create_edit':1}"/>
+                    <field name="quote_ref_id" options="{'limit': 7, 'create': false, 'create_edit': false}"/>
                 </field>
                 <xpath expr="//page[@string='Other Information']/group/group/field[@name='user_id']" position="before">
                     <field name="approval_id"/>
@@ -161,10 +161,10 @@
             <field name="inherit_id" ref="sale_invoice_plan.view_order_form"/>
             <field name="arch" type="xml">
                 <!-- sale order -->
-                <xpath expr="///div/field[@name='use_invoice_plan']" position="attributes">
+                <xpath expr="//div/field[@name='use_invoice_plan']" position="attributes">
                     <attribute name="attrs">{'invisible':[('order_type','=','quotation')]}</attribute>
                 </xpath>
-                <xpath expr="///div/label[@for='use_invoice_plan']" position="attributes">
+                <xpath expr="//div/label[@for='use_invoice_plan']" position="attributes">
                     <attribute name="attrs">{'invisible':[('order_type','=','quotation')]}</attribute>
                 </xpath>
             </field>

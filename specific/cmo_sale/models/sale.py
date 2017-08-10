@@ -24,11 +24,11 @@ class SaleCovenantDescription(models.Model):
     @api.multi
     @api.constrains('active')
     def _constrains_active(self):
-        self.ensure_one()
-        active_cov = self.env['sale.covenant.description'].\
-            search([('active', '=', True), ])
-        if len(active_cov) > 1:
-            raise ValidationError("Must be only 1 active covenant!")
+        for rec in self:
+            active_cov = rec.env['sale.covenant.description'].\
+                search([('active', '=', True), ])
+            if len(active_cov) > 1:
+                raise ValidationError(_('Must be only 1 active covenant!'))
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE(name)', 'Name must be unique!'),
@@ -99,7 +99,7 @@ class SaleOrder(models.Model):
     @api.model
     def create(self, vals):
         ctx = self._context.copy()
-        current_date = datetime.date.today()
+        current_date = fields.Date.context_today(self)
         fiscalyear_id = self.env['account.fiscalyear'].find(dt=current_date)
         ctx["fiscalyear_id"] = fiscalyear_id
         if (vals.get('order_type', False) or
@@ -118,8 +118,8 @@ class SaleOrder(models.Model):
     @api.multi
     @api.depends('amount_before_management_fee')
     def _compute_before_management_fee(self):
-        total = sum(self.order_line.filtered(\
-            lambda r : r.order_lines_group == 'before'
+        total = sum(self.order_line.filtered(
+            lambda r: r.order_lines_group == 'before'
             ).mapped('price_unit'))
         self.amount_before_management_fee = total
 
@@ -150,17 +150,17 @@ class SaleOrder(models.Model):
     @api.multi
     @api.constrains('order_line')
     def _constrains_order_line(self):
-        self.ensure_one()
-        if not self.order_line:
-            raise ValidationError("Must have at least 1 order line!")
-        else:
-            for line in self.order_line:
-                if ((line.price_unit <= 0) or (line.product_uom_qty <= 0)) and \
-                   (line.order_lines_group == 'before'):
-                    raise ValidationError(
-                        "Unit Price and Quantity in order \
-                        line must more than zero !"
-                    )
+        for rec in self:
+            if not self.order_line:
+                raise ValidationError(_('Must have at least 1 order line!'))
+            else:
+                for line in self.order_line:
+                    if ((line.price_unit <= 0) or (line.product_uom_qty <= 0))\
+                            and (line.order_lines_group == 'before'):
+                        raise ValidationError(
+                            _('Unit Price and Quantity in order \
+                            line must more than zero !')
+                        )
 
     @api.multi
     def _get_amount_by_custom_group(self, custom_group):
@@ -175,7 +175,7 @@ class SaleOrder(models.Model):
     @api.multi
     def _compute_margin_percentage(self):
         for order in self:
-            if order.amount_untaxed != 0:
+            if order.amount_untaxed != 0.0:
                 order.margin_percentage = order.margin * 100 /\
                     order.amount_untaxed
 
