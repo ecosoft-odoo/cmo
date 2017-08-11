@@ -13,8 +13,12 @@
         'sale_layout',
         'sale_stock',
         'sale_margin',
+        'sale_invoice_plan',
+        'sale_split_quote2order',
     ],
     'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'data/sale_data.xml',
         'wizard/cal_manage_fee_view.xml',
         'views/sale_view.xml',
