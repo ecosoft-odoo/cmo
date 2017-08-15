@@ -94,7 +94,8 @@ class ProjectProject(models.Model):
         store=True,
     )
     remain_advance = fields.Float(
-        string='Remain Advance',
+        string='Advance Balance',
+        compute='_compute_remain_advance',
         states={'close': [('readonly', True)]},
     )
     expense = fields.Float(
@@ -444,6 +445,19 @@ class ProjectProject(models.Model):
                 project.write({'state': 'invoices'})
             else:
                 project.write({'state': 'ready_billing'})
+
+    @api.multi
+    @api.depends('remain_advance')
+    def _compute_remain_advance(self):
+        for rec in self:
+            Expense_line = self.env['hr.expense.line'].search([
+                ('analytic_account', '=', rec.analytic_account_id.id),
+            ])
+            line_ids = Expense_line.filtered(
+                lambda r: r.expense_id.is_employee_advance and
+                (r.expense_id.state in 'paid'))
+            rec.remain_advance = sum(
+                line_ids.expense_id.mapped('amount_to_clearing'))
 
 
 class ProjectTeamMember(models.Model):
