@@ -334,14 +334,18 @@
                  <xpath expr="//notebook/page[@string='Other Info']" position="after">
                     <page string="Budget &amp; Cost" groups="project.group_project_admin,project.group_project_readonly,project.group_project_manager">
                         <group>
-                            <field name="actual_price" readonly="1"/>
-                            <field name="estimate_cost" readonly="1"/>
-                            <field name="pre_cost"/>
-                            <field name="actual_po" readonly="1"/>
-                            <field name="remain_advance" readonly="1"/>
-                            <field name="expense" readonly="1"/>
-                            <field name="remaining_cost" readonly="1"/>
-                            <field name="is_paid" invisible="1"/>
+                            <group>
+                                <field name="actual_price" readonly="1"/>
+                                <field name="estimate_cost" readonly="1"/>
+                                <field name="pre_cost"/>
+                                <field name="actual_po" readonly="1"/>
+                                <field name="expense" readonly="1"/>
+                                <field name="remaining_cost" readonly="1"/>
+                                <field name="is_paid" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="remain_advance" readonly="1"/>
+                            </group>
                         </group>
                     </page>
                  </xpath>
