@@ -16,6 +16,7 @@
         'project',
     ],
     "data": [
+        # 'data/stock_data.xml',
         'security/cmo_stock_security.xml',
         'security/ir.model.access.csv',
         'views/stock_view.xml',

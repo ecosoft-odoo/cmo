@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="stock.location" id="stock_location_cmex">
+            <field name="name">CMEX</field>
+            <field name="usage">production</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record model="stock.warehouse" id="warehouse_cmex">
+            <field name="name">CMEX</field>
+            <field name="code">CMEX</field>
+            <field name="operating_unit_id" ref="base.operating_unit_cmex"/>
+        </record>
+
+        <record model="stock.location" id="stock_location_it_issue">
+            <field name="name">IT ISSUE</field>
+            <field name="usage">production</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record model="stock.warehouse" id="warehouse_it_issue">
+            <field name="name">IT ISSUE</field>
+            <field name="code">IT ISSUE</field>
+            <field name="operating_unit_id" ref="base.operating_unit_it_issue"/>
+        </record>
+
+        <record model="stock.location" id="stock_location_fm_issue">
+            <field name="name">FM ISSUE</field>
+            <field name="usage">production</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record model="stock.warehouse" id="warehouse_fm_issue">
+            <field name="name">FM ISSUE</field>
+            <field name="code">FM ISSUE</field>
+            <field name="operating_unit_id" ref="base.operating_unit_fm_issue"/>
+        </record>
+
+        <function id="function_warehouse_adjust_location"
+                  model="stock.warehouse"
+                  name="_adjust_dest_location"/>
+    </data>
+</openerp>

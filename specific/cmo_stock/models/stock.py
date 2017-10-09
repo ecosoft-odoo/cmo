@@ -111,3 +111,32 @@ class StockPickingType(models.Model):
         result = action.read()[0]
         result.update({'domain': domain})
         return result
+
+
+class StockWarehouse(models.Model):
+    _inherit = 'stock.warehouse'
+
+    @api.model
+    def _adjust_dest_location(self):
+        cr = self.env.cr
+        cr.execute("SELECT id, name, operating_unit_id FROM stock_warehouse")
+        warehouse_ids = cr.dictfetchall()
+        for res in warehouse_ids:
+            location_production_id = self.env['stock.location'].search([
+                ('usage', '=', 'production'),
+                ('name', '=', res['name'])
+            ]) or False
+            picking_type_id = self.env['stock.picking.type'].search([
+                ('name', '=', 'Delivery Orders'),
+                ('warehouse_id', '=', res['id']),
+            ]) or False
+
+            if picking_type_id and location_production_id:
+                picking_type_id[0].write({
+                    'default_location_dest_id': location_production_id[0].id})
+                source_location = picking_type_id[0].default_location_src_id \
+                    or False
+                if source_location and res['operating_unit_id']:
+                    source_location.write(
+                        {'operating_unit_id': res['operating_unit_id']})
+        return True
