@@ -8,6 +8,10 @@ import openerp.addons.decimal_precision as dp
 class sale_order(models.Model):
     _inherit = 'sale.order'
 
+    discount_type = fields.Selection(
+        readonly=True,
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+    )
     amount_untaxed = fields.Float(
         compute='_amount_all',
         store=False,

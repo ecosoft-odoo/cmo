@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="sale.view_order_form"></field>
             <field name="arch" type="xml">
                 <xpath expr="//h1/field[@name='name']" position="after">
-                    <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
+                    <div class="oe_right oe_button_box" name="buttons" groups="base.group_user" attrs="{'invisible': [('order_type','=','sale_order')]}">
                         <button class="oe_inline oe_stat_button" type="object" name="order_revision_tree_view" icon="fa-list">
                            <field string="Revision" name="old_revision_ids" widget="x2many_counter"/>
                         </button>
@@ -16,7 +16,7 @@
                 <xpath expr="//h1" position="after">
                     <group col-span="4">
                     </group>
-                    <p class="oe_right">
+                    <p class="oe_right" attrs="{'invisible': [('order_type','=','sale_order')]}">
                         Current Revision:
                         <field name="current_revision_id" class="oe_inline" nolabel="1"/>
                     </p>
