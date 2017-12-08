@@ -42,20 +42,20 @@ class AccountInvoice(models.Model):
         })
         return res
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form',
-                        toolbar=False, submenu=False):
-        res = super(AccountInvoice, self).fields_view_get(
-            view_id, view_type, toolbar=toolbar, submenu=submenu)
-
-        # Suplier Invoice
-        if self._context.get('default_type', False) == 'in_invoice' and\
-                self._context.get('type', False) == 'in_invoice' and\
-                self._context.get('journal_type', False) == 'purchase':
-            root = etree.fromstring(res['arch'])
-            root.set('create', 'false')
-            res['arch'] = etree.tostring(root)
-        return res
+    # @api.model
+    # def fields_view_get(self, view_id=None, view_type='form',
+    #                     toolbar=False, submenu=False):
+    #     res = super(AccountInvoice, self).fields_view_get(
+    #         view_id, view_type, toolbar=toolbar, submenu=submenu)
+    #
+    #     # Suplier Invoice
+    #     if self._context.get('default_type', False) == 'in_invoice' and\
+    #             self._context.get('type', False) == 'in_invoice' and\
+    #             self._context.get('journal_type', False) == 'purchase':
+    #         root = etree.fromstring(res['arch'])
+    #         root.set('create', 'false')
+    #         res['arch'] = etree.tostring(root)
+    #     return res
 
 
 class AccountInvoiceLine(models.Model):

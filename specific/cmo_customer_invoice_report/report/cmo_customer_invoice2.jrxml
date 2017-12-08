@@ -3,7 +3,7 @@
 	<property name="OPENERP_RELATIONS" value="[&quot;invoice_line&quot;]"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="91"/>
+	<property name="ireport.y" value="207"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
 	<queryString language="xPath">
 		<![CDATA[/data/record]]>
@@ -258,13 +258,6 @@ $F{others_note}]]></textFieldExpression>
 					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA["(" + (new Scriptlet()).getAmtInWords((new BigDecimal($V{string_total}==""?0:$V{string_total})).setScale(2).toString(),"THB") + ")"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="15" y="18" width="295" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font pdfFontName="Garuda.ttf" pdfEncoding="Identity-H"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA["(" + (new Scriptlet()).getAmtInWords((new BigDecimal($V{string_tax}==""?0:$V{string_tax})).setScale(2).toString(),"THB") + ")"]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

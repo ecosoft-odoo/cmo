@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "HR Expense Advance Clearing",
-    "summary": "HR Expense Advance Clearing.",
+    "name": "Petty Cash",
+    "summary": "",
     "version": "8.0.1.0.0",
     "category": "Accounting & Finance",
     "description": """
-
-HR Expense Advance Clearing
-============================
-
-HR Expense Advance Clearing
-
+This module allow setting of petty cash holder / amount.
+When user do expense request, user can request with the petty cash holder.
     """,
     "website": "https://ecosoft.co.th/",
     "author": "Kitti U.",
@@ -18,15 +14,12 @@ HR Expense Advance Clearing
     "application": False,
     "installable": True,
     "depends": [
-        "hr_expense_sequence",
-        "hr_expense_auto_invoice",
+        'hr_expense_advance_clearing',
     ],
     "data": [
         'security/ir.model.access.csv',
-        'data/hr_expense_data.xml',
-        'data/invoice_workflow.xml',
-        'views/account_config.xml',
-        'views/hr_expense_view.xml',
         'views/account_invoice_view.xml',
+        'views/pettycash_view.xml',
+        'views/hr_expense_view.xml',
     ],
 }
