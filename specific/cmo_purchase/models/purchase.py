@@ -86,6 +86,16 @@ class PurchaseOrder(models.Model):
         #     context = context
         # window.write({'context': context})
 
+    @api.model
+    def create(self, vals):
+        if vals.get('name', '/') == '/':
+            ctx = self._context.copy()
+            fiscalyear_id = self.env['account.fiscalyear'].find()
+            ctx["fiscalyear_id"] = fiscalyear_id
+            vals['name'] = self.env['ir.sequence'].\
+                with_context(ctx).get('cmo.purchase')
+        return super(PurchaseOrder, self).create(vals)
+
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'

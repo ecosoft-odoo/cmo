@@ -9,8 +9,10 @@
     "version": "1.0",
     'depends': [
         'purchase_operating_unit',
+        'account_auto_fy_sequence',
     ],
     'data': [
+        'data/cmo_purchase_sequence.xml',
         'security/cmo_purchase_security.xml',
         'views/purchase_view.xml',
         'reports/purchase_report.xml',
